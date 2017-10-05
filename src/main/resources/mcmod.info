@@ -1,0 +1,16 @@
+[
+{
+  "modid": "abusedlib",
+  "name": "AbusedLib",
+  "description": "A lib mod containing utility classes.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["abused_master"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
