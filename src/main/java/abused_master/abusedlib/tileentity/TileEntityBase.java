@@ -32,46 +32,6 @@ public class TileEntityBase extends TileEntity implements ITickable {
     public void update() {
     }
 
-    /**
-     * old update methods
-     @Nullable
-     @Override
-     public SPacketUpdateTileEntity getUpdatePacket() {
-     NBTTagCompound data = new NBTTagCompound();
-     writeToNBT(data);
-     return new SPacketUpdateTileEntity(this.pos, 1, data);
-     }
-
-     @Override
-     @SideOnly(Side.CLIENT)
-     public void onDataPacket(NetworkManager networkManager, SPacketUpdateTileEntity s35PacketUpdateTileEntity) {
-     readFromNBT(s35PacketUpdateTileEntity.getNbtCompound());
-     world.markBlockRangeForRenderUpdate(this.pos, this.pos);
-     if (this.world != null) {
-     this.world.notifyBlockUpdate(this.pos, world.getBlockState(this.pos), world.getBlockState(this.pos), 3);
-     }
-     }
-
-     @Override
-     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
-     return oldState.getBlock() != newState.getBlock();
-     }
-
-     @Override
-     public NBTTagCompound getUpdateTag()
-     {
-     NBTTagCompound nbtTagCompound = new NBTTagCompound();
-     writeToNBT(nbtTagCompound);
-     return nbtTagCompound;
-     }
-
-     @Override
-     public void handleUpdateTag(NBTTagCompound tag)
-     {
-     this.readFromNBT(tag);
-     }
-     */
-    //////////////////////////////////
     @Override
     @Nullable
     public SPacketUpdateTileEntity getUpdatePacket() {
