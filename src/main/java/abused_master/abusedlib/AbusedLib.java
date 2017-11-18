@@ -13,7 +13,7 @@ public class AbusedLib {
 
     public static final String MODID = "abusedlib";
     public static final String MODNAME = "AbusedLib";
-    public static final String VERSION = "1.0.5_1.12";
+    public static final String VERSION = "1.0.6_1.12";
     public static final String ACCEPTED_VERSIONS = "[1.12,1.12.2] ";
 
     @SidedProxy(clientSide = "abused_master.abusedlib.proxy.ClientProxy", serverSide = "abused_master.abusedlib.proxy.CommonProxy")
