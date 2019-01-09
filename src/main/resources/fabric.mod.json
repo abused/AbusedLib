@@ -1,0 +1,17 @@
+{
+  "id": "abusedlib",
+  "name": "AbusedLib",
+  "description": "A lib mod with utilities i commonly use",
+  "version": "1.0.0",
+  "side": "universal",
+  "initializers": [
+    "abused_master.abusedlib.AbusedLib"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "abusedlib.client.json",
+    "common": "abusedlib.common.json"
+  }
+}
