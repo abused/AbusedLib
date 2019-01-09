@@ -1,0 +1,28 @@
+package abused_master.abusedlib.items;
+
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.util.Identifier;
+
+public class ItemBase extends Item {
+
+    private String name;
+
+    public ItemBase(String name, ItemGroup tab) {
+        super(new Settings().itemGroup(tab));
+        this.name = name;
+    }
+
+    public ItemBase(String name, ItemGroup tab, int stackSize) {
+        super(new Settings().itemGroup(tab).stackSize(stackSize));
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Identifier getNameIdentifier(String modid) {
+        return new Identifier(modid, getName());
+    }
+}
