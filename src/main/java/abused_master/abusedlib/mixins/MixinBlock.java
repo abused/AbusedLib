@@ -1,7 +1,7 @@
 package abused_master.abusedlib.mixins;
 
 import abused_master.abusedlib.event.BlockEvents;
-import abused_master.abusedlib.event.EventRegistry;
+import abused_master.abusedlib.registry.EventRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +18,7 @@ public class MixinBlock {
     @Inject(method = "onBreak", at = @At("HEAD"))
     public void onBreak(World world_1, BlockPos blockPos_1, BlockState blockState_1, PlayerEntity playerEntity_1, CallbackInfo ci) {
         BlockEvents.BlockBreakEvent blockBreakEvent = new BlockEvents.BlockBreakEvent(world_1, blockPos_1, blockState_1, playerEntity_1);
-        EventRegistry.invokeEvent(blockBreakEvent);
+        EventRegistry.runEvent(blockBreakEvent);
 
         if(blockBreakEvent.isCanceled()) {
             ci.cancel();
@@ -29,7 +29,7 @@ public class MixinBlock {
     @Inject(method = "onBlockBreakStart", at = @At("HEAD"))
     public void onBlockBreakStart(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, CallbackInfo ci) {
         BlockEvents.BlockBreakEvent blockBreakEvent = new BlockEvents.BlockBreakEvent(world_1, blockPos_1, blockState_1, playerEntity_1);
-        EventRegistry.invokeEvent(blockBreakEvent);
+        EventRegistry.runEvent(blockBreakEvent);
 
         if(blockBreakEvent.isCanceled()) {
             ci.cancel();

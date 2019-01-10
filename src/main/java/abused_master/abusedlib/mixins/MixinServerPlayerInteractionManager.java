@@ -1,7 +1,7 @@
 package abused_master.abusedlib.mixins;
 
 import abused_master.abusedlib.event.BlockEvents;
-import abused_master.abusedlib.event.EventRegistry;
+import abused_master.abusedlib.registry.EventRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +24,7 @@ public class MixinServerPlayerInteractionManager {
     @Inject(method = "destroyBlock", at = @At("HEAD"))
     private void destroyBlock(BlockPos blockPos_1, CallbackInfoReturnable cir) {
         BlockEvents.BlockBreakEvent blockBreakEvent = new BlockEvents.BlockBreakEvent(world, blockPos_1, world.getBlockState(blockPos_1), player);
-        EventRegistry.invokeEvent(blockBreakEvent);
+        EventRegistry.runEvent(blockBreakEvent);
 
         if(blockBreakEvent.isCanceled()) {
             cir.setReturnValue(false);
