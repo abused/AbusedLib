@@ -42,4 +42,18 @@ public class BlockEvents extends Event {
             return player;
         }
     }
+
+    public static class BlockDropsEvent extends BlockEvents {
+
+        public BlockDropsEvent(World world, BlockPos pos, BlockState state) {
+            super(world, pos, state);
+        }
+    }
+
+    public static class BlockPlaceEvent extends BlockEvents {
+
+        public BlockPlaceEvent(World world, BlockPos pos, BlockState state) {
+            super(world, pos, state);
+        }
+    }
 }
