@@ -5,12 +5,10 @@ import abused_master.abusedlib.items.ItemBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.block.BlockItem;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.DefaultMappedRegistry;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
@@ -26,41 +24,50 @@ public class RegistryHelper {
      * Blocks and Item registry Helpers
      */
     public static void registerBlock(String modid, BlockBase block) {
-        Registry.register(DefaultMappedRegistry.BLOCK, block.getNameIdentifier(modid), block);
-        Registry.register(DefaultMappedRegistry.ITEM, block.getNameIdentifier(modid), new BlockItem(block, new Item.Settings().itemGroup(block.getTab())));
+        Registry.register(Registry.BLOCK, block.getNameIdentifier(modid), block);
+        Registry.register(Registry.ITEM, block.getNameIdentifier(modid), new BlockItem(block, new Item.Settings().itemGroup(block.getTab())));
     }
 
     public static void registerBlock(String modid, BlockBase block, BlockItem blockItem) {
-        Registry.register(DefaultMappedRegistry.BLOCK, block.getNameIdentifier(modid), block);
-        Registry.register(DefaultMappedRegistry.ITEM, block.getNameIdentifier(modid), blockItem);
+        Registry.register(Registry.BLOCK, block.getNameIdentifier(modid), block);
+        Registry.register(Registry.ITEM, block.getNameIdentifier(modid), blockItem);
     }
 
     public static void registerBlock(String modid, String name, ItemGroup itemGroup, Block block) {
-        Registry.register(DefaultMappedRegistry.BLOCK, new Identifier(modid, name), block);
-        Registry.register(DefaultMappedRegistry.ITEM, new Identifier(modid, name), new BlockItem(block, new Item.Settings().itemGroup(itemGroup)));
+        Registry.register(Registry.BLOCK, new Identifier(modid, name), block);
+        Registry.register(Registry.ITEM, new Identifier(modid, name), new BlockItem(block, new Item.Settings().itemGroup(itemGroup)));
     }
 
     public static void registerBlock(String modid, String name, Block block, BlockItem blockItem) {
-        Registry.register(DefaultMappedRegistry.BLOCK, new Identifier(modid, name), block);
-        Registry.register(DefaultMappedRegistry.ITEM, new Identifier(modid, name), blockItem);
+        Registry.register(Registry.BLOCK, new Identifier(modid, name), block);
+        Registry.register(Registry.ITEM, new Identifier(modid, name), blockItem);
     }
 
     public static void registerItem(String modid, ItemBase item) {
-        Registry.register(DefaultMappedRegistry.ITEM, item.getNameIdentifier(modid), item);
+        Registry.register(Registry.ITEM, item.getNameIdentifier(modid), item);
     }
 
     public static void registerItem(String modid, String name, Item item) {
-        Registry.register(DefaultMappedRegistry.ITEM, new Identifier(modid, name), item);
+        Registry.register(Registry.ITEM, new Identifier(modid, name), item);
     }
 
     /**
      * Tile entity registry
      * EX: BlockEntityType<BlockEntityTest> BET = registerTile(MODID, NAME, BlockEntityTest::new);
+     */
+    public static BlockEntityType registerTile(String modid, String name, Class<? extends BlockEntity> blockEntity) {
+        return Registry.register(Registry.BLOCK_ENTITY, new Identifier(modid, name), BlockEntityType.Builder.create((Supplier<BlockEntity>) () -> {
+            try {
+                return blockEntity.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
-    public static BlockEntityType registerTile(String modid, String name, Supplier blockEntity) {
-        return Registry.register(DefaultMappedRegistry.BLOCK_ENTITY, new Identifier(modid, name), BlockEntityType.Builder.create(blockEntity).method_11034(null));
+            return null;
+        }).method_11034(null));
     }
-    */
 
     /**
      * World Gen Ore Registry
