@@ -1,4 +1,4 @@
-package abused_master.abusedlib.event;
+package abused_master.abusedlib.events;
 
 public class Event {
 
@@ -14,7 +14,7 @@ public class Event {
 
     public void cancel() {
         if(!canCancel()) {
-            throw new UnsupportedOperationException("Attempted to cancel a non cancelable event");
+            throw new UnsupportedOperationException("Attempted to cancel a non cancelable events");
         }
 
         this.isCanceled = true;

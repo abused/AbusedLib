@@ -1,7 +1,7 @@
 package abused_master.abusedlib.registry;
 
-import abused_master.abusedlib.event.Event;
-import abused_master.abusedlib.event.EventSubscriber;
+import abused_master.abusedlib.events.Event;
+import abused_master.abusedlib.events.EventSubscriber;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

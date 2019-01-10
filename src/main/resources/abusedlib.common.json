@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinBlock",
-    "MixinServerPlayerInteractionManager"
+    "MixinServerPlayerInteractionManager",
+    "MixinItemStack"
   ],
   "injectors": {
     "defaultRequire": 1

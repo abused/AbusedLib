@@ -1,6 +1,6 @@
 package abused_master.abusedlib.mixins;
 
-import abused_master.abusedlib.event.BlockEvents;
+import abused_master.abusedlib.events.BlockEvents;
 import abused_master.abusedlib.registry.EventRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -26,7 +26,8 @@ public class MixinServerPlayerInteractionManager {
         BlockEvents.BlockBreakEvent blockBreakEvent = new BlockEvents.BlockBreakEvent(world, blockPos_1, world.getBlockState(blockPos_1), player);
         EventRegistry.runEvent(blockBreakEvent);
 
-        if(blockBreakEvent.isCanceled()) {
+        if(blockBreakEvent.isCanceled() && cir.isCancellable()) {
+            cir.cancel();
             cir.setReturnValue(false);
         }
     }
