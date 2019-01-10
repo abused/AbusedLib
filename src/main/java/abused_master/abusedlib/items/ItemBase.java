@@ -13,8 +13,8 @@ public class ItemBase extends Item {
         this.name = name;
     }
 
-    public ItemBase(String name, ItemGroup tab, int stackSize) {
-        super(new Settings().itemGroup(tab).stackSize(stackSize));
+    public ItemBase(String name, Settings itemSettings) {
+        super(itemSettings);
         this.name = name;
     }
 
