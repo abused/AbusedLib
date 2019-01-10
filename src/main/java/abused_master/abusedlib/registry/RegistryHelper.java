@@ -56,10 +56,11 @@ public class RegistryHelper {
     /**
      * Tile entity registry
      * EX: BlockEntityType<BlockEntityTest> BET = registerTile(MODID, NAME, BlockEntityTest::new);
-     */
+
     public static BlockEntityType registerTile(String modid, String name, Supplier blockEntity) {
         return Registry.register(DefaultMappedRegistry.BLOCK_ENTITY, new Identifier(modid, name), BlockEntityType.Builder.create(blockEntity).method_11034(null));
     }
+    */
 
     /**
      * World Gen Ore Registry
