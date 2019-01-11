@@ -3,12 +3,6 @@
   "package": "abused_master.abusedlib.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinBlock",
-    "MixinServerPlayerInteractionManager",
-    "MixinItemStack",
-    "MixinServerWorld",
-    "MixinWorld",
-    "MixinPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1
