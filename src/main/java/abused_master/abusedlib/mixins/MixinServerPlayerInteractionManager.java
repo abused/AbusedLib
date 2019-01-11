@@ -1,7 +1,7 @@
 package abused_master.abusedlib.mixins;
 
-import abused_master.abusedlib.events.BlockEvents;
-import abused_master.abusedlib.registry.EventRegistry;
+import abused_master.abusedlib.eventhandler.events.BlockEvents;
+import abused_master.abusedlib.eventhandler.EventRegistry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.util.math.BlockPos;
@@ -21,14 +21,14 @@ public class MixinServerPlayerInteractionManager {
     @Shadow
     public ServerPlayerEntity player;
 
-    @Inject(method = "destroyBlock", at = @At("HEAD"))
+    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
     private void destroyBlock(BlockPos blockPos_1, CallbackInfoReturnable cir) {
         BlockEvents.BlockBreakEvent blockBreakEvent = new BlockEvents.BlockBreakEvent(world, blockPos_1, world.getBlockState(blockPos_1), player);
         EventRegistry.runEvent(blockBreakEvent);
 
-        if(blockBreakEvent.isCanceled() && cir.isCancellable()) {
-            cir.cancel();
+        if (blockBreakEvent.isCanceled()) {
             cir.setReturnValue(false);
+            cir.cancel();
         }
     }
 }

@@ -1,7 +1,7 @@
-package abused_master.abusedlib.registry;
+package abused_master.abusedlib.eventhandler;
 
-import abused_master.abusedlib.events.Event;
-import abused_master.abusedlib.events.EventSubscriber;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class EventRegistry {
 
     public static Map<Method, Object> eventSubscriberMethods = new HashMap<>();
-    public static Map<Method, Class> methodEventMap = new HashMap<>();
+    public static Multimap<Class, Method> classMethodMultimap = LinkedListMultimap.create();
 
     public static void registerEventHandler(Object clazz) {
         for (Method method : clazz.getClass().getMethods()) {
@@ -23,17 +23,15 @@ public class EventRegistry {
 
                 for (Class paramClass : method.getParameterTypes()) {
                     eventSubscriberMethods.put(method, clazz);
-                    methodEventMap.put(method, paramClass);
+                    classMethodMultimap.put(paramClass, method);
                 }
             }
         }
     }
 
     public static void runEvent(Event event) {
-        for (Method method : methodEventMap.keySet()) {
-            if(methodEventMap.get(method) == event.getClass()) {
-                invokeMethod(eventSubscriberMethods.get(method), method, event);
-            }
+        for (Method method : classMethodMultimap.get(event.getClass())) {
+            invokeMethod(eventSubscriberMethods.get(method), method, event);
         }
     }
 

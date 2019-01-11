@@ -1,5 +1,6 @@
-package abused_master.abusedlib.events;
+package abused_master.abusedlib.eventhandler.events;
 
+import abused_master.abusedlib.eventhandler.CancelableEvent;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -9,7 +10,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockEvents extends Event {
+public class BlockEvents extends CancelableEvent {
 
     private World world;
     private BlockPos pos;

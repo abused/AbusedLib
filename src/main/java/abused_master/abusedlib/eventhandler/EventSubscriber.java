@@ -1,4 +1,4 @@
-package abused_master.abusedlib.events;
+package abused_master.abusedlib.eventhandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

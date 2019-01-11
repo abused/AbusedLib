@@ -1,7 +1,7 @@
 package abused_master.abusedlib.mixins;
 
-import abused_master.abusedlib.events.BlockEvents;
-import abused_master.abusedlib.registry.EventRegistry;
+import abused_master.abusedlib.eventhandler.events.BlockEvents;
+import abused_master.abusedlib.eventhandler.EventRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ItemStack.class)
 public class MixinItemStack {
 
-    @Inject(method = "useOnBlock", at = @At("HEAD"))
+    @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
     public void useOnBlock(ItemUsageContext itemUsageContext_1, CallbackInfoReturnable cir) {
         if (itemUsageContext_1.getItemStack().getItem() instanceof BlockItem) {
             World world = itemUsageContext_1.getWorld();
@@ -31,11 +31,10 @@ public class MixinItemStack {
             BlockEvents.BlockPlaceEvent blockPlaceEvent = new BlockEvents.BlockPlaceEvent(world, pos, Block.getBlockFromItem(stack.getItem()).getDefaultState(), playerEntity, world.getBlockState(pos.offset(facing)));
             EventRegistry.runEvent(blockPlaceEvent);
 
-            if(blockPlaceEvent.isCanceled() && cir.isCancellable()) {
-                cir.cancel();
+            if (blockPlaceEvent.isCanceled()) {
                 cir.setReturnValue(ActionResult.PASS);
+                cir.cancel();
             }
         }
     }
-
 }
