@@ -1,5 +1,6 @@
 plugins {
 	id 'fabric-loom' version '0.2.0-SNAPSHOT'
+	id 'maven-publish'
 }
 
 sourceCompatibility = 1.8
@@ -26,3 +27,23 @@ dependencies {
 
 	compile 'com.github.Carleslc:Simple-YAML:1.2'
 }
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifact jar
+			artifact javadocJar
+			artifact sourcesJar
+		}
+	}
+
+	repositories {
+		mavenLocal()
+	}
+}
+tasks.publish.dependsOn build
