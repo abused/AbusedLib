@@ -6,6 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+group = "abused_master.abusedlib.AbusedLib"
 archivesBaseName = "abusedlib"
 version = "1.0.0-fabric"
 
