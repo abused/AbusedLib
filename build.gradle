@@ -37,7 +37,6 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			artifact jar
-			artifact javadocJar
 			artifact sourcesJar
 		}
 	}
