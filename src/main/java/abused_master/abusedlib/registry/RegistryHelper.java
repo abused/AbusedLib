@@ -66,7 +66,7 @@ public class RegistryHelper {
             }
 
             return null;
-        }).method_11034(null));
+        }).build(null));
     }
 
     /**
