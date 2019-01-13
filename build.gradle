@@ -28,6 +28,17 @@ dependencies {
 	compile 'com.github.Carleslc:Simple-YAML:1.2'
 }
 
+jar {
+	from "LICENSE.md"
+	manifest.mainAttributes(
+			"Implementation-Title": project.name,
+			"Implementation-Version": project.version,
+			"Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}".toLowerCase(Locale.ROOT),
+			"Built-On-Minecraft": "${mc_version}",
+			"Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
+	)
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
 	classifier = 'sources'
 	from sourceSets.main.allSource
