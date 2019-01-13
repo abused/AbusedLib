@@ -1,6 +1,5 @@
 package abused_master.abusedlib.utils.energy;
 
-import abused_master.abusedlib.tiles.TileEntityEnergyBase;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -31,8 +30,15 @@ public class EnergyStorage implements IEnergyStorage {
 
     @Override
     public void sendEnergy(World world, BlockPos pos, int amount) {
-        if(world.getBlockEntity(pos) instanceof TileEntityEnergyBase) {
-            EnergyStorage storageEntity = ((TileEntityEnergyBase) world.getBlockEntity(pos)).getEnergyStorage();
+
+    }
+
+    /**
+     * Come back to once energy capability is created
+    @Override
+    public void sendEnergy(World world, BlockPos pos, int amount) {
+        if(world.getBlockEntity(pos) instanceof TileEntityBase) {
+            EnergyStorage storageEntity = ((TileEntityBase) world.getBlockEntity(pos)).getEnergyStorage();
             if(amount > energyStored) {
                 storageEntity.recieveEnergy(energyStored);
                 this.extractEnergy(energyStored);
@@ -42,6 +48,7 @@ public class EnergyStorage implements IEnergyStorage {
             }
         }
     }
+    */
 
     @Override
     public void extractEnergy(int amount) {

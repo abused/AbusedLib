@@ -1,20 +1,17 @@
 package abused_master.abusedlib;
 
-import net.fabricmc.api.ClientModInitializer;
+import abused_master.abusedlib.registry.CapabilityRegistry;
 import net.fabricmc.api.ModInitializer;
 
 import java.util.logging.Logger;
 
-public class AbusedLib implements ModInitializer, ClientModInitializer {
+public class AbusedLib implements ModInitializer {
 
     public static final String MODID = "abusedlib";
     public static Logger LOGGER = Logger.getLogger("AbusedLib");
 
     @Override
-    public void onInitializeClient() {
-    }
-
-    @Override
     public void onInitialize() {
+        CapabilityRegistry.registerCapabilities();
     }
 }

@@ -47,7 +47,7 @@ public class Config {
         }
 
         if (defaultConfigFile == null) {
-            AbusedLib.LOGGER.log(Level.SEVERE, "Unable to find the default config.yml for mod " + modid + " in assets/" + modid);
+            AbusedLib.LOGGER.log(Level.SEVERE, "Unable to find the defaults config.yml for mod " + modid + " in assets/" + modid);
             System.exit(-1);
             return;
         }

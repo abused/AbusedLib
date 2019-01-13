@@ -1,5 +1,6 @@
 package abused_master.abusedlib.tiles;
 
+import abused_master.abusedlib.capabilities.utils.ICapabilityContainer;
 import net.fabricmc.fabric.block.entity.ClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -7,14 +8,10 @@ import net.minecraft.client.network.packet.BlockEntityUpdateClientPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
-public class TileEntityBase extends BlockEntity implements Tickable, ClientSerializable {
+public abstract class TileEntityBase extends BlockEntity implements Tickable, ClientSerializable, ICapabilityContainer {
 
     public TileEntityBase(BlockEntityType<?> blockEntityType_1) {
         super(blockEntityType_1);
-    }
-
-    @Override
-    public void tick() {
     }
 
     @Override
