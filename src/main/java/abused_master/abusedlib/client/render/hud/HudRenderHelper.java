@@ -1,4 +1,4 @@
-package abused_master.abusedlib.client.render;
+package abused_master.abusedlib.client.render.hud;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;

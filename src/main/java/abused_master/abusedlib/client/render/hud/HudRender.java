@@ -1,4 +1,4 @@
-package abused_master.abusedlib.client.render;
+package abused_master.abusedlib.client.render.hud;
 
 import net.minecraft.util.math.Direction;
 
