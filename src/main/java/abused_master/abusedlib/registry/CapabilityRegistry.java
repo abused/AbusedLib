@@ -3,7 +3,8 @@ package abused_master.abusedlib.registry;
 import abused_master.abusedlib.AbusedLib;
 import abused_master.abusedlib.capabilities.Capability;
 import abused_master.abusedlib.capabilities.CapabilityHandler;
-import abused_master.abusedlib.capabilities.defaults.inventory.CapabilityItemHandler;
+import abused_master.abusedlib.capabilities.defaults.CapabilityEnergyStorage;
+import abused_master.abusedlib.capabilities.defaults.CapabilityItemHandler;
 import abused_master.abusedlib.capabilities.utils.CapabilityInject;
 import abused_master.abusedlib.capabilities.utils.RegisterCapability;
 import net.minecraft.util.Identifier;
@@ -21,7 +22,7 @@ import java.util.function.Function;
 
 public class CapabilityRegistry {
 
-    public CapabilityRegistry INSTANCE = new CapabilityRegistry();
+    public static final CapabilityRegistry INSTANCE = new CapabilityRegistry();
 
     private final Map<Identifier, Class> capabilitiesMap;
     private final List<Function<Capability<?>, Object>> functions;
@@ -38,12 +39,13 @@ public class CapabilityRegistry {
      */
     public void addCapabilities() {
         capabilitiesMap.put(new Identifier(AbusedLib.MODID, "capability_item_handler"), CapabilityItemHandler.class);
+        capabilitiesMap.put(new Identifier(AbusedLib.MODID, "capability_energy"), CapabilityEnergyStorage.class);
     }
 
     /**
      * Loop through default capabilities in list and register them
      */
-    public static void registerCapabilities() {
+    public void registerCapabilities() {
         addCapabilities();
 
         for (Identifier identifier : capabilitiesMap.keySet()) {

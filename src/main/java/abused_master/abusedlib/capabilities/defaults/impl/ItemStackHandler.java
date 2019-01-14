@@ -1,4 +1,4 @@
-package abused_master.abusedlib.capabilities.defaults.inventory;
+package abused_master.abusedlib.capabilities.defaults.impl;
 
 import abused_master.abusedlib.capabilities.utils.ITagSerializable;
 import abused_master.abusedlib.capabilities.NBTConstants;

@@ -1,4 +1,4 @@
-package abused_master.abusedlib.utils.energy;
+package abused_master.abusedlib.capabilities.defaults.impl;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -11,4 +11,5 @@ public interface IEnergyStorage {
     int getEnergyStored();
     int getEnergyCapacity();
     void setEnergyCapacity(int maxCapacity);
+    void setEnergyStored(int energy);
 }

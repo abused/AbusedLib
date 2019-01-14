@@ -1,7 +1,9 @@
-package abused_master.abusedlib.capabilities.defaults.inventory;
+package abused_master.abusedlib.capabilities.defaults;
 
 import abused_master.abusedlib.capabilities.Capability;
 import abused_master.abusedlib.capabilities.CapabilityHandler;
+import abused_master.abusedlib.capabilities.defaults.impl.IItemHandler;
+import abused_master.abusedlib.capabilities.defaults.impl.ItemStackHandler;
 import abused_master.abusedlib.capabilities.utils.CapabilityInject;
 import abused_master.abusedlib.capabilities.utils.RegisterCapability;
 import net.minecraft.item.ItemStack;

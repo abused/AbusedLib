@@ -12,6 +12,6 @@ public class AbusedLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        CapabilityRegistry.registerCapabilities();
+        CapabilityRegistry.INSTANCE.registerCapabilities();
     }
 }
