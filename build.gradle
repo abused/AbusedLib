@@ -7,26 +7,26 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 group = "abused_master.abusedlib.AbusedLib"
-archivesBaseName = "abusedlib"
-version = "1.0.0-fabric"
+archivesBaseName = "AbusedLib"
+version = "${mod_version}"
 
 minecraft {
 }
 
 repositories {
 	jcenter()
-    maven { url = "https://jitpack.io" }
+	maven { url = "https://jitpack.io/" }
 	maven { url = "https://oss.sonatype.org/content/repositories/releases/" }
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w02a"
-	mappings "net.fabricmc:yarn:19w02a.24"
-	modCompile "net.fabricmc:fabric-loader:0.3.2.95"
+	minecraft "com.mojang:minecraft:${mc_version}"
+	mappings "net.fabricmc:yarn:${yarn_mappings}"
+	modCompile "net.fabricmc:fabric-loader:${loader_version}"
+	modCompile "net.fabricmc:fabric:${fabric_version}"
 
-	modCompile "net.fabricmc:fabric:0.1.4.72"
-
-	compile 'com.github.Carleslc:Simple-YAML:1.2'
+	compile "com.github.Carleslc:Simple-YAML:${simpleyml_version}"
+	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
 }
 
 jar {
@@ -35,14 +35,18 @@ jar {
 			"Implementation-Title": project.name,
 			"Implementation-Version": project.version,
 			"Maven-Artifact": "${project.group}:${project.archivesBaseName}:${project.version}".toLowerCase(Locale.ROOT),
-			"Built-On-Minecraft": "19w02a",
+			"Built-On-Minecraft": "${mc_version}",
 			"Built-On-Java": "${System.getProperty("java.vm.version")} (${System.getProperty("java.vm.vendor")})"
 	)
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = 'sources'
 	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+artifacts {
+	archives sourcesJar
 }
 
 publishing {
@@ -50,11 +54,42 @@ publishing {
 		mavenJava(MavenPublication) {
 			artifact jar
 			artifact sourcesJar
+			pom {
+				name = "AbusedLib"
+				url = "https://github.com/abused/AbusedLib"
+				licenses {
+					license {
+						name = "MIT License"
+						url = "https://github.com/abused/AbusedLib/blob/master/LICENSE.md"
+					}
+				}
+				scm {
+					url = "https://github.com/abused/AbusedLib"
+					connection = "scm:git:git://github.com/abused/AbusedLib.git"
+					developerConnection = "scm:git:git@github.com:abused/AbusedLib.git"
+				}
+				issueManagement {
+					system = "github"
+					url = "https://github.com/abused/AbusedLib/issues"
+				}
+			}
 		}
 	}
 
 	repositories {
-		mavenLocal()
+		if (project.hasProperty("maven_user") && project.hasProperty("maven_pass")) {
+			maven {
+				name = "Abused's Maven"
+				url = findProperty("maven_url")
+				credentials {
+					username = findProperty("maven_user")
+					password = findProperty("maven_pass")
+				}
+				authentication {
+					basic(BasicAuthentication)
+				}
+			}
+		}
 	}
 }
 tasks.publish.dependsOn build

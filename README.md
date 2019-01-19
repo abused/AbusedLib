@@ -6,14 +6,15 @@ Lib mod used by most of my other mods for 1.14 that simplifies my life.
 ```
 repositories {
     maven {
-        name = "JitPack"
-        url = "https://jitpack.io"
+        name = "Abused's Maven"
+        url = "https://maven.abusedmaster.xyz"
     }
 }
 
 dependencies {
-    modCompile "com.github.abused:AbusedLib:master-SNAPSHOT"
+    modCompile "abused_master.abusedlib:AbusedLib:${mod_version}"
 }
 ```
+~*Note: You can find all versions of the library over at *https://maven.abusedmaster.xyz/**
 
 *AbusedLib is licensed under MIT, feel free to use it how you like.*

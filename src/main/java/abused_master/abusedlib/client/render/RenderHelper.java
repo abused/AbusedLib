@@ -38,7 +38,7 @@ public class RenderHelper {
 
         GlStateManager.disableLighting();
         GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GlStateManager.SrcBlendFactor.SRC_ALPHA, GlStateManager.DstBlendFactor.ONE);
+        GlStateManager.blendFunc(GlStateManager.class_1033.SRC_ALPHA, GlStateManager.class_1027.ONE);
         int func = GL11.glGetInteger(GL11.GL_ALPHA_TEST_FUNC);
         float ref = GL11.glGetFloat(GL11.GL_ALPHA_TEST_REF);
         GlStateManager.alphaFunc(GL11.GL_ALWAYS, 0);
@@ -76,7 +76,7 @@ public class RenderHelper {
         GlStateManager.enableTexture();
 
         GlStateManager.alphaFunc(func, ref);
-        GlStateManager.blendFunc(GlStateManager.SrcBlendFactor.SRC_ALPHA, GlStateManager.DstBlendFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.blendFunc(GlStateManager.class_1033.SRC_ALPHA, GlStateManager.class_1027.ONE_MINUS_SRC_ALPHA);
         GlStateManager.disableBlend();
         GlStateManager.enableLighting();
         GlStateManager.popMatrix();
