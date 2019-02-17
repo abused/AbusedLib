@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "abused_master.abusedlib.AbusedLib"
+group = "abused_master.abusedlib"
 archivesBaseName = "AbusedLib"
 version = "${mod_version}"
 
@@ -25,7 +25,7 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${loader_version}"
 	modCompile "net.fabricmc:fabric:${fabric_version}"
 
-	compile "com.github.Carleslc:Simple-YAML:${simpleyml_version}"
+	implementation "com.github.Carleslc:Simple-YAML:${simpleyml_version}"
 	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
 }
 

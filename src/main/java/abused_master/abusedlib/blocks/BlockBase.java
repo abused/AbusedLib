@@ -1,15 +1,12 @@
 package abused_master.abusedlib.blocks;
 
-import net.fabricmc.fabric.block.FabricBlockSettings;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
+import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.BlockView;
 
-import javax.annotation.Nullable;
-
-public abstract class BlockBase extends BlockWithEntity {
+public abstract class BlockBase extends Block {
 
     private String name;
     private ItemGroup tab;
@@ -20,7 +17,7 @@ public abstract class BlockBase extends BlockWithEntity {
         this.tab = itemGroup;
     }
 
-    public BlockBase(String name, ItemGroup itemGroup, Block.Settings blockSettings) {
+    public BlockBase(String name, ItemGroup itemGroup, Settings blockSettings) {
         super(blockSettings);
         this.name = name;
         this.tab = itemGroup;
@@ -36,16 +33,5 @@ public abstract class BlockBase extends BlockWithEntity {
 
     public ItemGroup getTab() {
         return tab;
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState var1) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
-        return null;
     }
 }

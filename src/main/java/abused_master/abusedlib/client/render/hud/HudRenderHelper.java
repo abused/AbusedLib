@@ -2,7 +2,7 @@ package abused_master.abusedlib.client.render.hud;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.FontRenderer;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.util.math.Direction;
 import org.lwjgl.opengl.GL11;
 
@@ -48,7 +48,7 @@ public class HudRenderHelper {
         GlStateManager.disableBlend();
         GlStateManager.disableLighting();
 
-        renderText(MinecraftClient.getInstance().fontRenderer, messages, 11, scale);
+        renderText(MinecraftClient.getInstance().textRenderer, messages, 11, scale);
 
         GlStateManager.enableLighting();
         GlStateManager.enableBlend();
@@ -78,7 +78,7 @@ public class HudRenderHelper {
         return f3;
     }
 
-    private static void renderText(FontRenderer fontrenderer, List<String> messages, int lines, float scale) {
+    private static void renderText(TextRenderer fontrenderer, List<String> messages, int lines, float scale) {
         GlStateManager.translatef(-0.5F, 0.5F, 0.07F);
         float f3 = 0.0075F;
         GlStateManager.scalef(f3 * scale, -f3 * scale, f3);
@@ -88,7 +88,7 @@ public class HudRenderHelper {
         renderLog(fontrenderer, messages, lines);
     }
 
-    private static void renderLog(FontRenderer fontrenderer, List<String> messages, int lines) {
+    private static void renderLog(TextRenderer fontrenderer, List<String> messages, int lines) {
         int currently = 7;
         int height = 10;
         int logsize = messages.size();
