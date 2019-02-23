@@ -3,7 +3,7 @@ package abused_master.abusedlib.tiles;
 import abused_master.abusedlib.AbusedLib;
 import abused_master.abusedlib.blocks.multipart.IMultipart;
 import abused_master.abusedlib.blocks.multipart.IMultipartHost;
-import abused_master.abusedlib.blocks.multipart.MultipartHelper;
+import abused_master.abusedlib.utils.MultipartHelper;
 import com.google.common.collect.Maps;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.nbt.CompoundTag;
@@ -40,8 +40,6 @@ public class BlockEntityMultipart extends BlockEntityBase implements IMultipartH
                 this.multiparts.put(direction, multipart);
             }
         }
-
-
     }
 
     @Override

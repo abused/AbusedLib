@@ -1,11 +1,11 @@
-package abused_master.abusedlib.blocks.multipart;
+package abused_master.abusedlib.utils;
 
+import abused_master.abusedlib.blocks.multipart.IMultipart;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-//TODO MOVE THIS OUT OF THE API ONCE ITS IN THE LIB
 public class MultipartHelper {
 
     public static CompoundTag serialize(IMultipart multipart, CompoundTag tag) {

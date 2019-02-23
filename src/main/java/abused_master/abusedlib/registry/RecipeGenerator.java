@@ -15,6 +15,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -22,10 +23,11 @@ import java.util.function.Consumer;
 public class RecipeGenerator {
 
     private final Consumer<RecipeGenerator> consumer;
-    public static List<Output> recipes = Lists.newArrayList();
+    private final List<Output> recipes;
 
     public RecipeGenerator(Consumer<RecipeGenerator> $) {
         this.consumer = $;
+        this.recipes = new ArrayList<>();
     }
 
     public void createShaped(ItemStack output, String group, String[] shape, Map<Character, Ingredient> ingredients) {
@@ -187,5 +189,13 @@ public class RecipeGenerator {
 
             return ingredients;
         }
+    }
+
+    public void accept() {
+        this.consumer.accept(this);
+    }
+
+    public List<Output> getRecipes() {
+        return recipes;
     }
 }

@@ -47,7 +47,7 @@ public class Config {
         }
 
         if (defaultConfigFile == null) {
-            AbusedLib.LOGGER.log(Level.SEVERE, "Unable to find the defaults config.yml for mod " + modid + " in assets/" + modid);
+            AbusedLib.LOGGER.log(Level.SEVERE, "Unable to find the default config.yml for mod " + modid + " in assets/" + modid);
             System.exit(-1);
             return;
         }
@@ -63,11 +63,9 @@ public class Config {
 
                 List<String> linesList = new ArrayList<>();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(defaultConfigFile));
-                String line = "";
 
                 while (reader.ready()) {
-                    line = reader.readLine();
-                    linesList.add(line);
+                    linesList.add(reader.readLine());
                 }
 
                 bufferedWriter = new BufferedWriter(new FileWriter(config.getConfigurationFile()));

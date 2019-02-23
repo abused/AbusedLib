@@ -3,6 +3,7 @@
   "package": "abused_master.abusedlib.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinSplashScreen"
   ],
   "injectors": {
     "defaultRequire": 1

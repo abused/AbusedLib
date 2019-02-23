@@ -3,7 +3,6 @@
   "package": "abused_master.abusedlib.mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinRecipeManager"
   ],
   "injectors": {
     "defaultRequire": 1

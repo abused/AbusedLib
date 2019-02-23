@@ -100,7 +100,7 @@ public class RenderHelper {
         MinecraftClient mc = MinecraftClient.getInstance();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBufferBuilder();
-        int brightness = mc.world.getLightLevel(LightType.BLOCK_LIGHT, pos);
+        int brightness = mc.world.getLightLevel(LightType.BLOCK, pos);
 
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR_UV_LMAP);
         Identifier spriteIdentifier = mc.getBakedModelManager().getBlockStateMaps().getModel(fluid.getFluid().getDefaultState().getBlockState()).getSprite().getId();
