@@ -77,7 +77,10 @@ public class Config {
 
                 printWriter.flush();
                 printWriter.close();
-                config.load();
+
+                if(config != null) {
+                    config.load();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InvalidConfigurationException e) {

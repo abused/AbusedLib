@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.2.0-SNAPSHOT'
 	id 'maven-publish'
+	id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 sourceCompatibility = 1.8
@@ -26,7 +27,20 @@ dependencies {
 	modCompile "net.fabricmc:fabric:${fabric_version}"
 
 	implementation "com.github.Carleslc:Simple-YAML:${simpleyml_version}"
+	shadow ("com.github.Carleslc:Simple-YAML:${simpleyml_version}") {
+		transitive = false
+	}
 	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
+}
+
+shadowJar {
+	configurations = [project.configurations.shadow]
+	classifier = "shadow"
+}
+
+remapJar {
+	dependsOn shadowJar
+	jar = shadowJar.archivePath
 }
 
 jar {

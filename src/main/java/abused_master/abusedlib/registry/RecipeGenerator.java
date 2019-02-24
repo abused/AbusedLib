@@ -89,7 +89,7 @@ public class RecipeGenerator {
     }
 
 
-    private static Identifier appendResult(JsonObject recipe, ItemStack output) {
+    private Identifier appendResult(JsonObject recipe, ItemStack output) {
         JsonObject result = new JsonObject();
         Identifier registryName = Registry.ITEM.getId(output.getItem());
         result.addProperty("item", registryName.toString());
@@ -99,7 +99,7 @@ public class RecipeGenerator {
         return registryName;
     }
 
-    private static JsonObject prepRecipe(String type, String group) {
+    private JsonObject prepRecipe(String type, String group) {
         JsonObject recipe = new JsonObject();
         recipe.addProperty("type", type);
 
@@ -178,7 +178,7 @@ public class RecipeGenerator {
                 else if (object instanceof ItemProvider)
                     ingredients.add(Ingredient.ofItems((ItemProvider) object));
                 else if (object instanceof ItemStack)
-                    ingredients.add(Ingredient.ofStacks((ItemStack) object));
+                    ingredients.add(Ingredient.ofItems(((ItemStack) object).getItem()));
                 else if (object instanceof Tag && ItemTags.getContainer().get(((Tag) object).getId()) != null)
                     ingredients.add(Ingredient.fromTag((Tag<Item>) object));
                 else if (object instanceof String)
@@ -192,6 +192,7 @@ public class RecipeGenerator {
     }
 
     public void accept() {
+        this.recipes.clear();
         this.consumer.accept(this);
     }
 
