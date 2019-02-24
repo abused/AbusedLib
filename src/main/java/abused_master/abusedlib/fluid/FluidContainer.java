@@ -3,21 +3,21 @@ package abused_master.abusedlib.fluid;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 
-public class FluidTank implements IFluidTank {
+public class FluidContainer implements IFluidContainer {
 
     private int capacity;
     private FluidStack fluidStack;
     private BlockEntity blockEntity;
 
-    public FluidTank(int capacity) {
+    public FluidContainer(int capacity) {
         this(null, capacity, null);
     }
 
-    public FluidTank(FluidStack stack, int capacity) {
+    public FluidContainer(FluidStack stack, int capacity) {
         this(stack, capacity, null);
     }
 
-    public FluidTank(FluidStack stack, int capacity, BlockEntity blockEntity) {
+    public FluidContainer(FluidStack stack, int capacity, BlockEntity blockEntity) {
         this.fluidStack = stack;
         this.capacity = capacity;
         this.blockEntity = blockEntity;
@@ -95,7 +95,7 @@ public class FluidTank implements IFluidTank {
     }
 
     @Override
-    public FluidTank readFromNBT(CompoundTag nbt) {
+    public FluidContainer readFromNBT(CompoundTag nbt) {
         if(!nbt.containsKey("empty")) {
             this.fluidStack = FluidStack.fluidFromTag(nbt);
         }else {

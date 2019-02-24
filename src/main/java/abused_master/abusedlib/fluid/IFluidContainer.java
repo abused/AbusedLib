@@ -3,7 +3,7 @@ package abused_master.abusedlib.fluid;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 
-public interface IFluidTank {
+public interface IFluidContainer {
 
     boolean extractFluid(int amount);
 
@@ -23,7 +23,7 @@ public interface IFluidTank {
 
     void setBlockEntity(BlockEntity blockEntity);
 
-    FluidTank readFromNBT(CompoundTag nbt);
+    FluidContainer readFromNBT(CompoundTag nbt);
 
     CompoundTag writeToNBT(CompoundTag nbt);
 }
