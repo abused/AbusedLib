@@ -2,5 +2,5 @@ package abused_master.abusedlib.fluid;
 
 public interface IFluidHandler {
 
-    FluidTank getFluidTank();
+    FluidContainer getFluidTank();
 }
