@@ -8,7 +8,6 @@ import com.google.gson.JsonParser;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 public class JsonConfig {
 
@@ -16,6 +15,18 @@ public class JsonConfig {
     private File configFile;
     private InputStream defaultConfigFile;
     private File configFolderFile = new File(System.getProperty("user.dir") + "/config");
+
+    public JsonConfig(String modid, Class mainModClass) {
+        this(modid, mainModClass, "", false);
+    }
+
+    public JsonConfig(String modid, Class mainModClass, String name) {
+        this(modid, mainModClass, name, false);
+    }
+
+    public JsonConfig(String modid, Class mainModClass, boolean createModConfigFolder) {
+        this(modid, mainModClass, "", createModConfigFolder);
+    }
 
     public JsonConfig(String modid, Class mainModClass, String name, boolean createModConfigFolder) {
         this.defaultConfigFile = mainModClass.getClassLoader().getResourceAsStream("assets/" + modid + "/config.json");
@@ -34,7 +45,7 @@ public class JsonConfig {
         }
 
         if (defaultConfigFile == null) {
-            AbusedLib.LOGGER.log(Level.SEVERE, "Unable to find the default config.json for mod " + modid + " in assets/" + modid);
+            AbusedLib.LOGGER.fatal("Unable to find the default config.json for mod ", modid, " in assets/", modid);
             System.exit(-1);
             return;
         }
@@ -75,7 +86,7 @@ public class JsonConfig {
                 }
             }
         }else {
-            AbusedLib.LOGGER.info("Loading config file for " + modid);
+            AbusedLib.LOGGER.info("Loading config file for {}", modid);
             this.loadConfigFile();
         }
     }

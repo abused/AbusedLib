@@ -1,7 +1,6 @@
 plugins {
 	id 'fabric-loom' version '0.2.0-SNAPSHOT'
 	id 'maven-publish'
-	id 'com.github.johnrengelman.shadow' version '4.0.4'
 }
 
 sourceCompatibility = 1.8
@@ -16,7 +15,6 @@ minecraft {
 
 repositories {
 	jcenter()
-	maven { url = "https://jitpack.io/" }
 	maven { url = "https://oss.sonatype.org/content/repositories/releases/" }
 }
 
@@ -25,22 +23,8 @@ dependencies {
 	mappings "net.fabricmc:yarn:${yarn_mappings}"
 	modCompile "net.fabricmc:fabric-loader:${loader_version}"
 	modCompile "net.fabricmc:fabric:${fabric_version}"
-
-	implementation "com.github.Carleslc:Simple-YAML:${simpleyml_version}"
-	shadow ("com.github.Carleslc:Simple-YAML:${simpleyml_version}") {
-		transitive = false
-	}
+	
 	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
-}
-
-shadowJar {
-	configurations = [project.configurations.shadow]
-	classifier = "shadow"
-}
-
-remapJar {
-	dependsOn shadowJar
-	jar = shadowJar.archivePath
 }
 
 jar {

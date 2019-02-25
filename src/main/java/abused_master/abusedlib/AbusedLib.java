@@ -5,13 +5,13 @@ import abused_master.abusedlib.tiles.BlockEntityMultipart;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
-
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AbusedLib implements ModInitializer {
 
     public static final String MODID = "abusedlib";
-    public static Logger LOGGER = Logger.getLogger("AbusedLib");
+    public static Logger LOGGER = LogManager.getLogger("AbusedLib");
     public static BlockEntityType<BlockEntityMultipart> MULTIPART;
 
     @Override

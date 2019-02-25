@@ -1,13 +1,12 @@
 package abused_master.abusedlib.utils;
 
 import abused_master.abusedlib.AbusedLib;
-import org.simpleyaml.configuration.file.YamlFile;
-import org.simpleyaml.exceptions.InvalidConfigurationException;
+import io.netty.util.internal.StringUtil;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Create a new instance of this class, providing the modid and the main mod class
@@ -16,7 +15,8 @@ public class Config {
 
     private YamlFile config;
     private InputStream defaultConfigFile;
-    private File configFolderFile = new File(System.getProperty("user.dir") + "/config");
+    private File configFolderFile = FabricLoader.getInstance().getConfigDirectory();
+    private String modid;
 
     public Config(String modid, Class mainModClass) {
         this(modid, mainModClass, "", false);
@@ -32,35 +32,22 @@ public class Config {
 
     public Config(String modid, Class mainModClass, String name, boolean createModConfigFolder) {
         this.defaultConfigFile = mainModClass.getClassLoader().getResourceAsStream("assets/" + modid + "/config.yml");
-        this.runConfigSetup(modid, createModConfigFolder, name.equals("") ? false : true, name);
+        this.config = new YamlFile(configFolderFile.getPath() + "/" + (createModConfigFolder ? modid + "/" : "") + (StringUtil.isNullOrEmpty(name) ? modid : name) + ".yml");
+        this.modid = modid;
+        this.runConfigSetup();
     }
 
-    private void runConfigSetup(String modid, boolean createModConfigFolder, boolean hasCustomName, String customConfigName) {
-        if(!configFolderFile.exists()) {
-            configFolderFile.mkdir();
-        }
-
-        if(!createModConfigFolder) {
-            this.config = new YamlFile(configFolderFile.getPath() + "/" + (hasCustomName ? customConfigName : modid) + ".yml");
-        }else {
-            this.config = new YamlFile(configFolderFile.getPath() + "/" + modid + "/" + (hasCustomName ? customConfigName : modid) + ".yml");
-        }
-
+    private void runConfigSetup() {
         if (defaultConfigFile == null) {
-            AbusedLib.LOGGER.log(Level.SEVERE, "Unable to find the default config.yml for mod " + modid + " in assets/" + modid);
+            AbusedLib.LOGGER.fatal("Unable to find the default config.yml for mod {} in assets/{}",  modid, modid);
             System.exit(-1);
             return;
         }
 
         if (!config.exists()) {
-            AbusedLib.LOGGER.info("Creating config file for " + modid);
+            AbusedLib.LOGGER.info("Creating config file for {}", modid);
 
-            BufferedWriter bufferedWriter = null;
-            PrintWriter printWriter = null;
-
-            try {
-                config.createNewFile(true);
-
+            try (PrintWriter printWriter = new PrintWriter(new FileWriter(config.getConfigFile()))) {
                 List<String> linesList = new ArrayList<>();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(defaultConfigFile));
 
@@ -68,78 +55,51 @@ public class Config {
                     linesList.add(reader.readLine());
                 }
 
-                bufferedWriter = new BufferedWriter(new FileWriter(config.getConfigurationFile()));
-                printWriter = new PrintWriter(bufferedWriter);
-
                 for (String string : linesList) {
                     printWriter.println(string);
                 }
 
-                printWriter.flush();
-                printWriter.close();
-
-                if(config != null) {
-                    config.load();
-                }
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                AbusedLib.LOGGER.fatal("You done borked something with your config", e);
             }
-        } else {
-            AbusedLib.LOGGER.info("Loading config file for " + modid);
 
-            try {
-                config.load();
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
-        try {
-            config.saveWithComments();
-        } catch (IOException e) {
-            e.printStackTrace();
+        AbusedLib.LOGGER.info("Loading config file for {}", modid);
+        if(config != null) {
+            config.load();
         }
     }
 
     public String getString(String name) {
-        return getYamlConfigFile().getString(name);
+        return getConfig().getString(name);
     }
 
     public int getInt(String name) {
-        return getYamlConfigFile().getInt(name);
+        return getConfig().getInt(name);
     }
 
     public double getDouble(String name) {
-        return getYamlConfigFile().getDouble(name);
+        return getConfig().getDouble(name);
     }
 
     public long getLong(String name) {
-        return getYamlConfigFile().getLong(name);
+        return getConfig().getLong(name);
     }
 
     public boolean getBoolean(String name) {
-        return getYamlConfigFile().getBoolean(name);
-    }
-
-    public List getList(String name) {
-        return getYamlConfigFile().getList(name);
+        return getConfig().getBoolean(name);
     }
 
     public Object get(String name) {
-        return getYamlConfigFile().get(name);
+        return getConfig().get(name);
     }
 
-    public YamlFile getYamlConfigFile() {
+    public boolean contains(String name) {
+        return getConfig().doesValueExist(name);
+    }
+
+    public YamlFile getConfig() {
         return config;
     }
 }
