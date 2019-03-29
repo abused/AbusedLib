@@ -1,10 +1,18 @@
 package abused_master.abusedlib.blocks;
 
+import com.google.common.collect.Lists;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.loot.context.LootContext;
+
+import java.util.List;
 
 public abstract class BlockBase extends Block {
 
@@ -33,5 +41,10 @@ public abstract class BlockBase extends Block {
 
     public ItemGroup getTab() {
         return tab;
+    }
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState blockState_1, LootContext.Builder lootContext$Builder_1) {
+        return Lists.newArrayList(new ItemStack(Item.getItemFromBlock(this)));
     }
 }

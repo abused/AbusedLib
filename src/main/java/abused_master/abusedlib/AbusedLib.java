@@ -1,5 +1,6 @@
 package abused_master.abusedlib;
 
+import abused_master.abusedlib.blocks.multiblock.MultiBlockBuilder;
 import abused_master.abusedlib.registry.RegistryHelper;
 import abused_master.abusedlib.tiles.BlockEntityMultipart;
 import net.fabricmc.api.ModInitializer;
@@ -17,5 +18,6 @@ public class AbusedLib implements ModInitializer {
     @Override
     public void onInitialize() {
         MULTIPART = RegistryHelper.registerTile(new Identifier(MODID, "blockentity_multipart"), BlockEntityMultipart.class);
+        MultiBlockBuilder.registerMultiBlockFunctions();
     }
 }
