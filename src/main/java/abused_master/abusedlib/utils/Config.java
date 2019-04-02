@@ -1,22 +1,21 @@
 package abused_master.abusedlib.utils;
 
 import abused_master.abusedlib.AbusedLib;
-import io.netty.util.internal.StringUtil;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Create a new instance of this class, providing the modid and the main mod class
- */
 public class Config {
 
-    private YamlFile config;
+    private JsonObject config;
+    private File configFile;
     private InputStream defaultConfigFile;
     private File configFolderFile = FabricLoader.getInstance().getConfigDirectory();
-    private String modid;
 
     public Config(String modid, Class mainModClass) {
         this(modid, mainModClass, "", false);
@@ -31,23 +30,33 @@ public class Config {
     }
 
     public Config(String modid, Class mainModClass, String name, boolean createModConfigFolder) {
-        this.defaultConfigFile = mainModClass.getClassLoader().getResourceAsStream("assets/" + modid + "/config.yml");
-        this.config = new YamlFile(configFolderFile.getPath() + "/" + (createModConfigFolder ? modid + "/" : "") + (StringUtil.isNullOrEmpty(name) ? modid : name) + ".yml");
-        this.modid = modid;
-        this.runConfigSetup();
+        this.defaultConfigFile = mainModClass.getClassLoader().getResourceAsStream("assets/" + modid + "/config.json");
+        this.runConfigSetup(modid, createModConfigFolder, name.equals("") ? false : true, name);
     }
 
-    private void runConfigSetup() {
+    private void runConfigSetup(String modid, boolean createModConfigFolder, boolean hasCustomName, String customConfigName) {
+        if(!configFolderFile.exists()) {
+            configFolderFile.mkdir();
+        }
+
+        if(!createModConfigFolder) {
+            this.configFile = new File(configFolderFile.getPath() + "/" + (hasCustomName ? customConfigName : modid) + ".json");
+        }else {
+            this.configFile = new File(configFolderFile.getPath() + "/" + modid + "/" + (hasCustomName ? customConfigName : modid) + ".json");
+        }
+
         if (defaultConfigFile == null) {
-            AbusedLib.LOGGER.fatal("Unable to find the default config.yml for mod {} in assets/{}",  modid, modid);
+            AbusedLib.LOGGER.fatal("Unable to find the default config.json for mod ", modid, " in assets/", modid);
             System.exit(-1);
             return;
         }
 
-        if (!config.exists()) {
+        if(!configFile.exists()) {
             AbusedLib.LOGGER.info("Creating config file for {}", modid);
 
-            try (PrintWriter printWriter = new PrintWriter(new FileWriter(config.getConfigFile()))) {
+            try (PrintWriter printWriter = new PrintWriter(new FileWriter(configFile))){
+                configFile.createNewFile();
+
                 List<String> linesList = new ArrayList<>();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(defaultConfigFile));
 
@@ -58,48 +67,50 @@ public class Config {
                 for (String string : linesList) {
                     printWriter.println(string);
                 }
-
             } catch (IOException e) {
                 AbusedLib.LOGGER.fatal("You done borked something with your config", e);
             }
-
+        }else {
+            AbusedLib.LOGGER.info("Loading config file for {}", modid);
+            this.loadConfigFile();
         }
+    }
 
-        AbusedLib.LOGGER.info("Loading config file for {}", modid);
-        if(config != null) {
-            config.load();
+    public void loadConfigFile() {
+        try {
+            config = new JsonObject();
+            JsonParser parser = new JsonParser();
+            config = parser.parse(new FileReader(configFile)).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
     public String getString(String name) {
-        return getConfig().getString(name);
+        return getJsonConfig().get(name).getAsString();
     }
 
     public int getInt(String name) {
-        return getConfig().getInt(name);
+        return getJsonConfig().get(name).getAsInt();
     }
 
     public double getDouble(String name) {
-        return getConfig().getDouble(name);
+        return getJsonConfig().get(name).getAsDouble();
     }
 
     public long getLong(String name) {
-        return getConfig().getLong(name);
+        return getJsonConfig().get(name).getAsLong();
     }
 
     public boolean getBoolean(String name) {
-        return getConfig().getBoolean(name);
+        return getJsonConfig().get(name).getAsBoolean();
     }
 
-    public Object get(String name) {
-        return getConfig().get(name);
+    public JsonArray getList(String name) {
+        return getJsonConfig().get(name).getAsJsonArray();
     }
 
-    public boolean contains(String name) {
-        return getConfig().doesValueExist(name);
-    }
-
-    public YamlFile getConfig() {
+    public JsonObject getJsonConfig() {
         return config;
     }
 }
