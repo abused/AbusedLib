@@ -29,12 +29,12 @@ public class HudRenderHelper {
                 GlStateManager.rotatef(-getHudAngle(orientation), 0.0F, 1.0F, 0.0F);
                 break;
             case HUD_TOPLAYER_HORIZ:
-                GlStateManager.rotatef(-MinecraftClient.getInstance().getEntityRenderManager().field_4679, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotatef(-MinecraftClient.getInstance().getEntityRenderManager().cameraYaw, 0.0F, 1.0F, 0.0F);
                 GlStateManager.rotatef(180, 0.0F, 1.0F, 0.0F);
                 break;
             case HUD_TOPLAYER:
-                GlStateManager.rotatef(-MinecraftClient.getInstance().getEntityRenderManager().field_4679, 0.0F, 1.0F, 0.0F);
-                GlStateManager.rotatef(MinecraftClient.getInstance().getEntityRenderManager().field_4677, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotatef(-MinecraftClient.getInstance().getEntityRenderManager().cameraYaw, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotatef(MinecraftClient.getInstance().getEntityRenderManager().cameraPitch, 1.0F, 0.0F, 0.0F);
                 GlStateManager.rotatef(180, 0.0F, 1.0F, 0.0F);
                 break;
         }

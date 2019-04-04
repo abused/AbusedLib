@@ -163,6 +163,7 @@ public class MultiBlockBuilder {
 
             JsonObject centerData = new JsonObject();
             JsonArray centerPosArray = new JsonArray();
+            JsonArray sizeArray = new JsonArray();
             Block centerBlock = world.getBlockState(centerPlayerPos).getBlock();
 
             centerPosArray.add(centerPos.getX());
@@ -171,6 +172,9 @@ public class MultiBlockBuilder {
             centerData.addProperty("block", Registry.BLOCK.getId(centerBlock).toString());
             centerData.add("pos", centerPosArray);
             multiblockData.add("center", centerData);
+            sizeArray.add(structure.getSize().getX());
+            sizeArray.add(structure.getSize().getY());
+            sizeArray.add(structure.getSize().getZ());
 
             int i = 0;
             for (List<Structure.StructureBlockInfo> structureBlockInfoList : list) {
@@ -184,11 +188,6 @@ public class MultiBlockBuilder {
                     posArray.add(structureBlockInfo.pos.getX());
                     posArray.add(structureBlockInfo.pos.getY());
                     posArray.add(structureBlockInfo.pos.getZ());
-
-                    JsonArray sizeArray = new JsonArray();
-                    posArray.add(structure.getSize().getX());
-                    posArray.add(structure.getSize().getY());
-                    posArray.add(structure.getSize().getZ());
 
                     componentData.addProperty("block", Registry.BLOCK.getId(structureBlockInfo.state.getBlock()).toString());
                     componentData.add("pos", posArray);
