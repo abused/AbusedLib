@@ -10,7 +10,7 @@ import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.command.ServerCommandManager;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.tag.Tag;
@@ -18,9 +18,9 @@ import net.minecraft.text.StringTextComponent;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -48,7 +48,7 @@ public class MultiBlockBuilder {
      */
     public static void registerMultiBlockFunctions() {
         CommandRegistry.INSTANCE.register(false, serverCommandSourceCommandDispatcher -> serverCommandSourceCommandDispatcher.register(
-                ServerCommandManager.literal("createmultiblock")
+                CommandManager.literal("createmultiblock")
                 .executes(context -> {
                     ServerPlayerEntity player = context.getSource().getPlayer();
 
@@ -229,7 +229,7 @@ public class MultiBlockBuilder {
                 if(direction == Direction.UP || direction == Direction.DOWN) {
                     offsetPos = centerPos.subtract(multiBlock.getCentralPoint()).add(templatePos);
                 }else {
-                    offsetPos = Structure.method_15168(centerPos.subtract(multiBlock.getCentralPoint()).add(templatePos), Mirror.NONE, toRotation(direction.getOpposite()), centerPos);
+                    offsetPos = Structure.method_15168(centerPos.subtract(multiBlock.getCentralPoint()).add(templatePos), BlockMirror.NONE, toRotation(direction.getOpposite()), centerPos);
                 }
 
                 if(block instanceof Block) {
@@ -262,7 +262,7 @@ public class MultiBlockBuilder {
         if (multiBlock.getCentralPoint() != null && toRotation(direction) != null) {
             for (Iterator<BlockPos> it = multiBlock.getMultiblockComponents().keySet().iterator(); it.hasNext(); ) {
                 BlockPos pos = it.next();
-                BlockPos offsetPos = Structure.method_15168(centerPos.subtract(multiBlock.getCentralPoint()).add(pos), Mirror.NONE, toRotation(direction.getOpposite()), centerPos);
+                BlockPos offsetPos = Structure.method_15168(centerPos.subtract(multiBlock.getCentralPoint()).add(pos), BlockMirror.NONE, toRotation(direction.getOpposite()), centerPos);
                 Object block = multiBlock.getComponent(pos);
 
                 if (block instanceof Block) {
@@ -279,20 +279,20 @@ public class MultiBlockBuilder {
     }
 
     /**
-     * Get a rotation from a direction
+     * Get a BlockRotation from a direction
      * @param direction - The direction used
-     * @return - Returns the appropriate rotation, null if Top/Bottom Directions
+     * @return - Returns the appropriate BlockRotation, null if Top/Bottom Directions
      */
-    public static Rotation toRotation(Direction direction) {
+    public static BlockRotation toRotation(Direction direction) {
         switch(direction) {
             case NORTH:
-                return Rotation.ROT_90;
+                return BlockRotation.ROT_90;
             case EAST:
-                return Rotation.ROT_180;
+                return BlockRotation.ROT_180;
             case SOUTH:
-                return Rotation.ROT_90;
+                return BlockRotation.ROT_90;
             case WEST:
-                return Rotation.ROT_0;
+                return BlockRotation.ROT_0;
             default:
                 return null;
         }
