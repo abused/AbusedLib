@@ -103,7 +103,8 @@ public class Config {
     }
 
     public boolean getBoolean(String name) {
-        return getJsonConfig().get(name).getAsBoolean();
+        //System.out.println(config.toString());
+        return true;
     }
 
     public JsonArray getList(String name) {
