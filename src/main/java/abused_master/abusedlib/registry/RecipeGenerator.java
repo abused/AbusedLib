@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.tag.FabricItemTags;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemProvider;
 import net.minecraft.item.ItemStack;
@@ -146,8 +148,8 @@ public class RecipeGenerator {
                         ingredients.put(character, Ingredient.ofItems((ItemProvider) next));
                     else if (next instanceof ItemStack)
                         ingredients.put(character, Ingredient.ofStacks((ItemStack) next));
-                    else if (next instanceof Tag && ItemTags.getContainer().get(((Tag) object).getId()) != null)
-                        ingredients.put(character, Ingredient.fromTag(ItemTags.getContainer().get(((Tag) next).getId())));
+                    else if (next instanceof Tag && TagRegistry.item(((Tag) next).getId()) != null)
+                        ingredients.put(character, Ingredient.fromTag(TagRegistry.item(((Tag) next).getId())));
                     else if (next instanceof String)
                         ingredients.put(character, Ingredient.fromTag(ItemTags.getContainer().get(new Identifier((String) next))));
                     else if (next instanceof Identifier)

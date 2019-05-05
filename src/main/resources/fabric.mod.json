@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "abusedlib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "AbusedLib",
   "description": "A lib mod with utilities I commonly use.",
   "authors": [
