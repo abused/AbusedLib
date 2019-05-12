@@ -73,14 +73,18 @@ public class RegistryHelper {
      * World Gen Ore Registry
      */
     public static void generateOreInStone(Block block, int veinSize, int spawnRate, int maxHeight) {
-        for (Biome biome : Biome.BIOMES) {
+        for (Biome biome : Registry.BIOME) {
             biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(net.minecraft.world.gen.feature.Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, block.getDefaultState(), veinSize), Decorator.COUNT_RANGE, new RangeDecoratorConfig(spawnRate, 0, 0, maxHeight)));
         }
     }
 
     public static void generateOre(Block block, OreFeatureConfig.Target target, int veinSize, int spawnRate, int maxHeight) {
-        for (Biome biome : Biome.BIOMES) {
+        for (Biome biome : Registry.BIOME) {
             biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(net.minecraft.world.gen.feature.Feature.ORE, new OreFeatureConfig(target, block.getDefaultState(), veinSize), Decorator.COUNT_RANGE, new RangeDecoratorConfig(spawnRate, 0, 0, maxHeight)));
         }
+    }
+
+    public static void generateOreInStone(Biome biome, Block block, int veinSize, int spawnRate, int maxHeight) {
+        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(net.minecraft.world.gen.feature.Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, block.getDefaultState(), veinSize), Decorator.COUNT_RANGE, new RangeDecoratorConfig(spawnRate, 0, 0, maxHeight)));
     }
 }
