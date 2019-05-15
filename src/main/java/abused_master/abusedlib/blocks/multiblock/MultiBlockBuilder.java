@@ -8,15 +8,15 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.tag.Tag;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextFormat;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -54,10 +54,10 @@ public class MultiBlockBuilder {
 
                     if(!activatedCommands.contains(player.getUuid())) {
                         activatedCommands.add(player.getUuid());
-                        player.addChatMessage(new StringTextComponent("Right click the center MultiBlock!").setStyle(new Style().setColor(TextFormat.GOLD)), false);
+                        player.addChatMessage(new TextComponent("Right click the center MultiBlock!").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
                     }else {
                         activatedCommands.remove(player.getUuid());
-                        player.addChatMessage(new StringTextComponent("Canceled MultiBlock creation!").setStyle(new Style().setColor(TextFormat.GOLD)), false);
+                        player.addChatMessage(new TextComponent("Canceled MultiBlock creation!").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
                     }
 
                     return 1;
@@ -69,7 +69,7 @@ public class MultiBlockBuilder {
             if(activatedCommands.contains(player.getUuid())) {
                 playerCommandCache.put(player.getUuid(), hitResult.getBlockPos());
                 activatedCommands.remove(player.getUuid());
-                player.addChatMessage(new StringTextComponent("Saved block as center for MultiBlock!").setStyle(new Style().setColor(TextFormat.GOLD)), false);
+                player.addChatMessage(new TextComponent("Saved block as center for MultiBlock!").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
                 return ActionResult.SUCCESS;
             }
 
@@ -286,13 +286,13 @@ public class MultiBlockBuilder {
     public static BlockRotation toRotation(Direction direction) {
         switch(direction) {
             case NORTH:
-                return BlockRotation.ROT_90;
+                return BlockRotation.CLOCKWISE_90;
             case EAST:
-                return BlockRotation.ROT_180;
+                return BlockRotation.CLOCKWISE_180;
             case SOUTH:
-                return BlockRotation.ROT_90;
+                return BlockRotation.COUNTERCLOCKWISE_90;
             case WEST:
-                return BlockRotation.ROT_0;
+                return BlockRotation.NONE;
             default:
                 return null;
         }

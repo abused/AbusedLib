@@ -55,7 +55,7 @@ public class RegistryHelper {
      * Tile entity registry
      * EX: BlockEntityType<BlockEntityTest> BlockEntityTest = registerTile(new Identifier(MODID, NAME), BlockEntityTest.class);
      */
-    public static BlockEntityType registerTile(Identifier identifier, Class<? extends BlockEntity> blockEntity) {
+    public static BlockEntityType registerTile(Identifier identifier, Class<? extends BlockEntity> blockEntity, Block... blocks) {
         return Registry.register(Registry.BLOCK_ENTITY, identifier, BlockEntityType.Builder.create((Supplier<BlockEntity>) () -> {
             try {
                 return blockEntity.newInstance();
@@ -66,7 +66,7 @@ public class RegistryHelper {
             }
 
             return null;
-        }).build(null));
+        }, blocks).build(null));
     }
 
     /**
