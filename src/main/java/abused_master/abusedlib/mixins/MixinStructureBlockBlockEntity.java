@@ -1,14 +1,14 @@
 package abused_master.abusedlib.mixins;
 
 import abused_master.abusedlib.blocks.multiblock.MultiBlockBuilder;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.entity.StructureBlockBlockEntity;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.Structure;
 import net.minecraft.structure.StructureManager;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextFormat;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,7 +41,7 @@ public abstract class MixinStructureBlockBlockEntity {
 
             if(player != null && MultiBlockBuilder.playerCommandCache.containsKey(player.getUuid())) {
                 MultiBlockBuilder.createMultiBlock(serverWorld, MultiBlockBuilder.playerCommandCache.get(player.getUuid()), minCorner, structure, structureName.getPath() + ".json");
-                player.addChatMessage(new StringTextComponent("Successfully saved multiblock " + structureName.getPath() + ".json").setStyle(new Style().setColor(TextFormat.GOLD)), false);
+                player.addChatMessage(new TextComponent("Successfully saved multiblock " + structureName.getPath() + ".json").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
                 cir.setReturnValue(true);
             }
         }

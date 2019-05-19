@@ -1,11 +1,11 @@
 package abused_master.abusedlib.blocks.property;
 
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.SnakeCaseIdentifiable;
 
 import java.util.EnumSet;
 
-public enum PropertyBlockFacings implements StringRepresentable {
+public enum PropertyBlockFacings implements SnakeCaseIdentifiable {
 
     None(BlockFacings.computeHash(false, false, false, false, false, false)),
     All(BlockFacings.computeHash(true, true, true, true, true, true)),
@@ -94,7 +94,7 @@ public enum PropertyBlockFacings implements StringRepresentable {
     public static final EnumSet<PropertyBlockFacings> PIPEENDS;
 
     @Override
-    public String asString() {
+    public String toSnakeCase() {
         return this._name;
     }
 
