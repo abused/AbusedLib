@@ -1,11 +1,11 @@
 package abused_master.abusedlib.blocks.property;
 
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.util.SnakeCaseIdentifiable;
+import net.minecraft.util.StringIdentifiable;
 
 import java.util.EnumSet;
 
-public enum PropertyBlockFacings implements SnakeCaseIdentifiable {
+public enum PropertyBlockFacings implements StringIdentifiable {
 
     None(BlockFacings.computeHash(false, false, false, false, false, false)),
     All(BlockFacings.computeHash(true, true, true, true, true, true)),

@@ -11,12 +11,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
 import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.tag.Tag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -290,7 +290,7 @@ public class MultiBlockBuilder {
             case EAST:
                 return BlockRotation.CLOCKWISE_180;
             case SOUTH:
-                return BlockRotation.CLOCKWISE_90;
+                return BlockRotation.COUNTERCLOCKWISE_90;
             case WEST:
                 return BlockRotation.NONE;
             default:

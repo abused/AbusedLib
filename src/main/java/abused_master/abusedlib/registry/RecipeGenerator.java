@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.ItemTags;
@@ -142,8 +143,8 @@ public class RecipeGenerator {
                     Object next = shape[i + 1];
                     if (next instanceof Ingredient)
                         ingredients.put(character, (Ingredient) next);
-                    else if (next instanceof Item)
-                        ingredients.put(character, Ingredient.ofItems((Item) next));
+                    else if (next instanceof ItemConvertible)
+                        ingredients.put(character, Ingredient.ofItems((ItemConvertible) next));
                     else if (next instanceof ItemStack)
                         ingredients.put(character, Ingredient.ofStacks((ItemStack) next));
                     else if (next instanceof Tag && TagRegistry.item(((Tag) next).getId()) != null)
@@ -175,8 +176,8 @@ public class RecipeGenerator {
             for (Object object : shape) {
                 if (object instanceof Ingredient)
                     ingredients.add((Ingredient) object);
-                else if (object instanceof Item)
-                    ingredients.add(Ingredient.ofItems((Item) object));
+                else if (object instanceof ItemConvertible)
+                    ingredients.add(Ingredient.ofItems((ItemConvertible) object));
                 else if (object instanceof ItemStack)
                     ingredients.add(Ingredient.ofItems(((ItemStack) object).getItem()));
                 else if (object instanceof Tag && ItemTags.getContainer().get(((Tag) object).getId()) != null)
