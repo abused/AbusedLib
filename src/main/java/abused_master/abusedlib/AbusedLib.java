@@ -17,7 +17,8 @@ public class AbusedLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        MULTIPART = RegistryHelper.registerTile(new Identifier(MODID, "blockentity_multipart"), BlockEntityMultipart.class);
+        //Tile registry now needs a list of blocks, will rewrite multipart system...
+        //MULTIPART = RegistryHelper.registerTile(new Identifier(MODID, "blockentity_multipart"), BlockEntityMultipart.class);
         MultiBlockBuilder.registerMultiBlockFunctions();
     }
 }

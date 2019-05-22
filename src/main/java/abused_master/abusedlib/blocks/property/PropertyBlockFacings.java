@@ -94,7 +94,7 @@ public enum PropertyBlockFacings implements StringIdentifiable {
     public static final EnumSet<PropertyBlockFacings> PIPEENDS;
 
     @Override
-    public String toSnakeCase() {
+    public String asString() {
         return this._name;
     }
 
