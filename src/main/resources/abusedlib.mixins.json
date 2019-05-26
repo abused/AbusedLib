@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinStructureBlockBlockEntity",
-    "MixinBucketItem"
+    "MixinBucketItem",
+    "MixinPlayerEntity"
   ],
   "injectors": {
     "defaultRequire": 1
