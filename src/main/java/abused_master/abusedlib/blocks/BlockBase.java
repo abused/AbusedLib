@@ -13,7 +13,7 @@ import net.minecraft.world.loot.context.LootContext;
 
 import java.util.List;
 
-public abstract class BlockBase extends Block {
+public class BlockBase extends Block {
 
     private String name;
     private ItemGroup tab;

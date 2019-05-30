@@ -16,7 +16,8 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "abused_master.abusedlib.AbusedLib"
+      "abused_master.abusedlib.AbusedLib",
+      "test.Test"
     ]
   },
   "mixins": [
