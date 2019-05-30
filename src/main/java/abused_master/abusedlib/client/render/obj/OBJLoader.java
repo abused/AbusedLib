@@ -3,10 +3,10 @@ package abused_master.abusedlib.client.render.obj;
 import abused_master.abusedlib.AbusedLib;
 import com.mojang.blaze3d.platform.GlStateManager;
 import joptsimple.internal.Strings;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.Vec2f;
 import org.lwjgl.opengl.GL11;
 
-import javax.vecmath.Vector2f;
-import javax.vecmath.Vector3f;
 import java.io.*;
 import java.util.*;
 
@@ -48,7 +48,7 @@ public class OBJLoader {
                     model.getNormals().get(face.getNormals()[1] - 1),
                     model.getNormals().get(face.getNormals()[2] - 1),
             };
-            Vector2f[] texCoords = {
+            Vec2f[] texCoords = {
                     model.getTextCoords().get(face.getTextureCoords()[0] - 1),
                     model.getTextCoords().get(face.getTextureCoords()[1] - 1),
                     model.getTextCoords().get(face.getTextureCoords()[2] - 1),
@@ -59,17 +59,17 @@ public class OBJLoader {
                     model.getVertices().get(face.getVertices()[2] - 1),
             };
 
-            GlStateManager.normal3f(normals[0].getX(), normals[0].getY(), normals[0].getZ());
-            GlStateManager.texCoord2f(texCoords[0].getX(), texCoords[0].getY());
-            GlStateManager.vertex3f(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ());
+            GlStateManager.normal3f(normals[0].x(), normals[0].y(), normals[0].z());
+            GlStateManager.texCoord2f(texCoords[0].x, texCoords[0].y);
+            GlStateManager.vertex3f(vertices[0].x(), vertices[0].y(), vertices[0].z());
 
-            GlStateManager.normal3f(normals[1].getX(), normals[1].getY(), normals[1].getZ());
-            GlStateManager.texCoord2f(texCoords[1].getX(), texCoords[1].getY());
-            GlStateManager.vertex3f(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ());
+            GlStateManager.normal3f(normals[1].x(), normals[1].y(), normals[1].z());
+            GlStateManager.texCoord2f(texCoords[1].x, texCoords[1].y);
+            GlStateManager.vertex3f(vertices[1].x(), vertices[1].y(), vertices[1].z());
 
-            GlStateManager.normal3f(normals[2].getX(), normals[2].getY(), normals[2].getZ());
-            GlStateManager.texCoord2f(texCoords[2].getX(), texCoords[2].getY());
-            GlStateManager.vertex3f(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ());
+            GlStateManager.normal3f(normals[2].x(), normals[2].y(), normals[2].z());
+            GlStateManager.texCoord2f(texCoords[2].x, texCoords[2].y);
+            GlStateManager.vertex3f(vertices[2].x(), vertices[2].y(), vertices[2].z());
         }
         GlStateManager.end();
     }
@@ -99,7 +99,7 @@ public class OBJLoader {
                         ));
                         break;
                     case "vt":
-                        model.getTextCoords().add(new Vector2f(
+                        model.getTextCoords().add(new Vec2f(
                                 Float.parseFloat(tokens[1]),
                                 Float.parseFloat(tokens[2])
                         ));

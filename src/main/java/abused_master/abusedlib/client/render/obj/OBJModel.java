@@ -1,5 +1,6 @@
 package abused_master.abusedlib.client.render.obj;
 
+import com.google.common.primitives.Ints;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexFormat;
@@ -9,24 +10,25 @@ import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
 
 import javax.annotation.Nullable;
-import javax.vecmath.Vector2f;
-import javax.vecmath.Vector3f;
 import java.util.*;
 
 public class OBJModel implements BakedModel {
 
     private final List<Vector3f> vertices;
-    private final List<Vector2f> textCoords;
+    private final List<Vec2f> textCoords;
     private final List<Vector3f> normals;
     private final List<Face> faces;
     private boolean smoothShading;
     private VertexFormat format;
     private Sprite sprite;
 
-    public OBJModel(List<Vector3f> vertices, List<Vector2f> textCoords, List<Vector3f> normals, List<Face> faces, boolean smoothShading) {
+    public OBJModel(List<Vector3f> vertices, List<Vec2f> textCoords, List<Vector3f> normals, List<Face> faces, boolean smoothShading) {
         this.vertices = vertices;
         this.textCoords = textCoords;
         this.normals = normals;
@@ -48,13 +50,7 @@ public class OBJModel implements BakedModel {
     private List<BakedQuad> buildQuads() {
         List<BakedQuad> quads = new ArrayList<>();
         for (Face face : faces) {
-            Vector3f[] normals = {
-                    getNormals().get(face.getNormals()[0] - 1),
-                    getNormals().get(face.getNormals()[1] - 1),
-                    getNormals().get(face.getNormals()[2] - 1),
-                    getNormals().get(face.getNormals()[3] - 1)
-            };
-            Vector2f[] texCoords = {
+            Vec2f[] texCoords = {
                     getTextCoords().get(face.getTextureCoords()[0] - 1),
                     getTextCoords().get(face.getTextureCoords()[1] - 1),
                     getTextCoords().get(face.getTextureCoords()[2] - 1),
@@ -67,48 +63,49 @@ public class OBJModel implements BakedModel {
                     getVertices().get(face.getVertices()[3] - 1)
             };
 
-            quads.add(createQuad(vertices, normals, texCoords));
+            quads.add(createQuad(vertices, texCoords));
         }
 
         return quads;
     }
 
-    public BakedQuad createQuad(Vector3f[] vertices, Vector3f[] normals, Vector2f[] textCoords) {
+    public BakedQuad createQuad(Vector3f[] vertices, Vec2f[] textCoords) {
+        Vector3f normal = vertices[2];
+        normal.subtract(vertices[0]);
+        Vector3f cross = vertices[3];
+        cross.subtract(vertices[1]);
+        normal.cross(cross);
 
-        UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
-        builder.setTexture(getSprite());
-        putVertex(builder, vertices[0], normals[0], textCoords[0]);
-        putVertex(builder, vertices[1], normals[1], textCoords[1]);
-        putVertex(builder, vertices[2], normals[2], textCoords[2]);
-        putVertex(builder, vertices[3], normals[3], textCoords[3]);
+        float scale = MathHelper.sqrt(normal.x() * normal.x() + normal.y() * normal.y() + normal.z() * normal.z());
+        if(scale < 1.0E-4f) normal.set(0, 0, 0);
+        normal.scale(1 / scale);
 
-        return builder.build();
+        //TODO later, for now use textures idc
+        int tintIndex = 0;
+
+        return new BakedQuad(Ints.concat(
+                vertexToInts(vertices[0], normal, textCoords[0]),
+                vertexToInts(vertices[1], normal, textCoords[1]),
+                vertexToInts(vertices[2], normal, textCoords[2]),
+                vertexToInts(vertices[3], normal, textCoords[3])),
+                tintIndex, Direction.getFacing(normal.x(), normal.y(), normal.z()), sprite);
     }
 
-    public void putVertex(UnpackedBakedQuad.Builder builder, Vector3f vertex, Vector3f normal, Vector2f textCoord) {
-        for (int e = 0; e < format.getElementCount(); e++) {
-            switch (format.getElement(e).getType()) {
-                case POSITION:
-                    builder.put(e, vertex.x, vertex.y, vertex.z);
-                    break;
-                case COLOR:
-                    builder.put(e, 1.0f, 1.0f, 1.0f);
-                    break;
-                case UV:
-                    if(format.getElement(e).getIndex() == 0 && textCoord != null) {
-                        float u = getSprite().getU(textCoord.x);
-                        float v = getSprite().getV(textCoord.y);
-                        builder.put(e, u, v, 0, 1);
-                        break;
-                    }
-                case NORMAL:
-                    if(normal != null) builder.put(e, normal.x, normal.y, normal.z);
-                    break;
-                default:
-                    builder.put(e);
-                    break;
-            }
-        }
+    public int[] vertexToInts(Vector3f vertex, Vector3f normal, Vec2f textCoord) {
+        int x = ((byte)(normal.x() * 127)) & 0xFF;
+        int y = ((byte)(normal.y() * 127)) & 0xFF;
+        int z = ((byte)(normal.z() * 127)) & 0xFF;
+        int compressedNormal = x | (y << 0x08) | (z << 0x10);
+
+        return new int[]{
+                Float.floatToRawIntBits(vertex.x()),
+                Float.floatToRawIntBits(vertex.y()),
+                Float.floatToRawIntBits(vertex.z()),
+                1,
+                Float.floatToRawIntBits(textCoord.x),
+                Float.floatToRawIntBits(textCoord.y),
+                compressedNormal
+        };
     }
 
     @Override
@@ -149,7 +146,7 @@ public class OBJModel implements BakedModel {
         return vertices;
     }
 
-    public List<Vector2f> getTextCoords() {
+    public List<Vec2f> getTextCoords() {
         return textCoords;
     }
 
