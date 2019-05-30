@@ -24,8 +24,7 @@ public abstract class MixinModelLoader {
     @Shadow
     private ResourceManager resourceManager;
 
-    //@Inject(method = "loadModel", at = @At(target = "Lnet/minecraft/client/render/model/ModelLoader;putModel(Lnet/minecraft/util/Identifier;Lnet/minecraft/client/render/model/UnbakedModel;)V", value = "INVOKE", shift = At.Shift.BEFORE), cancellable = true)
-    @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "loadModel", at = @At(target = "Lnet/minecraft/client/render/model/ModelLoader;putModel(Lnet/minecraft/util/Identifier;Lnet/minecraft/client/render/model/UnbakedModel;)V", value = "INVOKE", shift = At.Shift.BEFORE), cancellable = true)
     private void loadModel(Identifier identifier, CallbackInfo ci) throws Exception {
         if(OBJLoader.INSTANCE.isRegisteredDomain(identifier.getNamespace()) && identifier.getPath().endsWith(".obj")) {
             Resource resource = this.resourceManager.getResource(new Identifier(identifier.getNamespace(), "models/" + identifier.getPath()));

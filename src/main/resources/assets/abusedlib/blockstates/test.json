@@ -1,5 +1,5 @@
 {
     "variants": {
-        "": { "model": "abusedlib:block/blastfurnace.obj" }
+        "": { "model": "abusedlib:block/brick.obj" }
     }
 }

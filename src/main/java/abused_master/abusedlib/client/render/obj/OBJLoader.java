@@ -2,14 +2,13 @@ package abused_master.abusedlib.client.render.obj;
 
 import abused_master.abusedlib.AbusedLib;
 import com.mojang.blaze3d.platform.GlStateManager;
+import joptsimple.internal.Strings;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import java.io.*;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class OBJLoader {
 
@@ -42,25 +41,22 @@ public class OBJLoader {
     //For TESR calls and whatnot
     public void render(OBJModel model) {
         GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 120);
-        GlStateManager.begin(GL11.GL_QUADS);
+        GlStateManager.begin(GL11.GL_TRIANGLES);
         for (Face face : model.getFaces()) {
             Vector3f[] normals = {
                     model.getNormals().get(face.getNormals()[0] - 1),
                     model.getNormals().get(face.getNormals()[1] - 1),
                     model.getNormals().get(face.getNormals()[2] - 1),
-                    model.getNormals().get(face.getNormals()[3] - 1)
             };
             Vector2f[] texCoords = {
                     model.getTextCoords().get(face.getTextureCoords()[0] - 1),
                     model.getTextCoords().get(face.getTextureCoords()[1] - 1),
                     model.getTextCoords().get(face.getTextureCoords()[2] - 1),
-                    model.getTextCoords().get(face.getTextureCoords()[3] - 1)
             };
             Vector3f[] vertices = {
                     model.getVertices().get(face.getVertices()[0] - 1),
                     model.getVertices().get(face.getVertices()[1] - 1),
                     model.getVertices().get(face.getVertices()[2] - 1),
-                    model.getVertices().get(face.getVertices()[3] - 1)
             };
 
             GlStateManager.normal3f(normals[0].getX(), normals[0].getY(), normals[0].getZ());
@@ -74,10 +70,6 @@ public class OBJLoader {
             GlStateManager.normal3f(normals[2].getX(), normals[2].getY(), normals[2].getZ());
             GlStateManager.texCoord2f(texCoords[2].getX(), texCoords[2].getY());
             GlStateManager.vertex3f(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ());
-
-            GlStateManager.normal3f(normals[3].getX(), normals[3].getY(), normals[3].getZ());
-            GlStateManager.texCoord2f(texCoords[3].getX(), texCoords[3].getY());
-            GlStateManager.vertex3f(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ());
         }
         GlStateManager.end();
     }
@@ -87,58 +79,57 @@ public class OBJLoader {
 
         Scanner scanner = new Scanner(reader);
         while (scanner.hasNextLine()) {
-            String ln = scanner.nextLine();
-            if (ln == null || ln.equals("") || ln.startsWith("#")) {
-            } else {
-                String[] split = ln.split(" ");
-                switch (split[0]) {
+            String line = scanner.nextLine();
+            if(line != null && !line.equals("") && !line.startsWith("#")) {
+                String[] tokens = line.split(" ");
+
+                switch (tokens[0]) {
                     case "v":
                         model.getVertices().add(new Vector3f(
-                                Float.parseFloat(split[1]),
-                                Float.parseFloat(split[2]),
-                                Float.parseFloat(split[3])
+                                Float.parseFloat(tokens[1]),
+                                Float.parseFloat(tokens[2]),
+                                Float.parseFloat(tokens[3])
                         ));
                         break;
                     case "vn":
                         model.getNormals().add(new Vector3f(
-                                Float.parseFloat(split[1]),
-                                Float.parseFloat(split[2]),
-                                Float.parseFloat(split[3])
+                                Float.parseFloat(tokens[1]),
+                                Float.parseFloat(tokens[2]),
+                                Float.parseFloat(tokens[3])
                         ));
                         break;
                     case "vt":
                         model.getTextCoords().add(new Vector2f(
-                                Float.parseFloat(split[1]),
-                                Float.parseFloat(split[2])
+                                Float.parseFloat(tokens[1]),
+                                Float.parseFloat(tokens[2])
                         ));
                         break;
                     case "f":
-                        model.getFaces().add(new Face(
-                                new int[]{
-                                        Integer.parseInt(split[1].split("/")[0]),
-                                        Integer.parseInt(split[2].split("/")[0]),
-                                        Integer.parseInt(split[3].split("/")[0]),
-                                        Integer.parseInt(split[4].split("/")[0])
-                                },
-                                new int[]{
-                                        Integer.parseInt(split[1].split("/")[1]),
-                                        Integer.parseInt(split[2].split("/")[1]),
-                                        Integer.parseInt(split[3].split("/")[1]),
-                                        Integer.parseInt(split[4].split("/")[1])
-                                },
-                                new int[]{
-                                        Integer.parseInt(split[1].split("/")[2]),
-                                        Integer.parseInt(split[2].split("/")[2]),
-                                        Integer.parseInt(split[3].split("/")[2]),
-                                        Integer.parseInt(split[4].split("/")[2])
-                                }
-                        ));
+                        int[] vertexIndices = new int[4];
+                        int[] textureCoordsIndices = new int[4];
+                        int[] normalIndices = new int[4];
+
+                        for (int i = 1; i < tokens.length; i++) {
+                            String[] data = tokens[i].split("/");
+
+                            vertexIndices[i - 1] = Integer.parseInt(data[0]);
+                            textureCoordsIndices[i - 1] = data.length < 2 || Strings.isNullOrEmpty(data[1]) ? null : Integer.parseInt(data[1]);
+                            normalIndices[i - 1] = data.length < 3 || Strings.isNullOrEmpty(tokens[2]) ? null : Integer.parseInt(data[2]);
+                        }
+
+                        if(tokens.length < 5) {
+                            vertexIndices[3] = Integer.parseInt(tokens[3].split("/")[0]);
+                            textureCoordsIndices[3] = tokens[3].split("/").length < 2 || Strings.isNullOrEmpty(tokens[3].split("/")[1]) ? null : Integer.parseInt(tokens[3].split("/")[1]);
+                            normalIndices[3] = tokens[3].split("/").length < 3 || Strings.isNullOrEmpty(tokens[2]) ? null : Integer.parseInt(tokens[3].split("/")[2]);
+                        }
+
+                        model.getFaces().add(new Face(vertexIndices, textureCoordsIndices, normalIndices));
                         break;
                     case "s":
-                        model.setSmoothShading(!ln.contains("off"));
+                        model.setSmoothShading(!line.contains("off"));
                         break;
                     default:
-                        AbusedLib.LOGGER.warn("Unknown line: " + ln);
+                        AbusedLib.LOGGER.warn("Unknown line: " + line);
                 }
             }
         }

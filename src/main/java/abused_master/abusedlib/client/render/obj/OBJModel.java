@@ -95,14 +95,14 @@ public class OBJModel implements BakedModel {
                     builder.put(e, 1.0f, 1.0f, 1.0f);
                     break;
                 case UV:
-                    if(format.getElement(e).getIndex() == 0) {
+                    if(format.getElement(e).getIndex() == 0 && textCoord != null) {
                         float u = getSprite().getU(textCoord.x);
                         float v = getSprite().getV(textCoord.y);
                         builder.put(e, u, v, 0, 1);
                         break;
                     }
                 case NORMAL:
-                    builder.put(e, normal.x, normal.y, normal.z);
+                    if(normal != null) builder.put(e, normal.x, normal.y, normal.z);
                     break;
                 default:
                     builder.put(e);
