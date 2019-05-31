@@ -1,7 +1,5 @@
 package abused_master.abusedlib.client.render.obj;
 
-import java.util.Arrays;
-
 public class Face {
 
     private final int[] vertexIndices;
@@ -28,18 +26,11 @@ public class Face {
         return this.normalIndices;
     }
 
-    public Face(int[] vertexIndices, int[] textureCoordinateIndices,
-                int[] normalIndices) {
+    public Face(int[] vertexIndices, int[] textureCoordinateIndices, int[] normalIndices) {
         super();
 
         this.vertexIndices = vertexIndices;
         this.normalIndices = normalIndices;
         this.textureCoordinateIndices = textureCoordinateIndices;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Face[vertexIndices%s normalIndices%s textureCoordinateIndices%s]",
-                Arrays.toString(vertexIndices), Arrays.toString(normalIndices), Arrays.toString(textureCoordinateIndices));
     }
 }

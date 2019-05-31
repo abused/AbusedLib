@@ -17,7 +17,7 @@
   "entrypoints": {
     "main": [
       "abused_master.abusedlib.AbusedLib",
-      "test.Test"
+      "abused_master.abusedlib.test.Test"
     ]
   },
   "mixins": [

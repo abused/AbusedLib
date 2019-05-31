@@ -1,4 +1,4 @@
-package test;
+package abused_master.abusedlib.test;
 
 import abused_master.abusedlib.blocks.BlockBase;
 import abused_master.abusedlib.client.render.obj.OBJLoader;

@@ -1,9 +1,10 @@
 package abused_master.abusedlib.client.render.obj;
 
-import com.google.common.primitives.Ints;
+import abused_master.abusedlib.utils.VertexDataUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
@@ -24,22 +25,21 @@ public class OBJModel implements BakedModel {
     private final List<Vec2f> textCoords;
     private final List<Vector3f> normals;
     private final List<Face> faces;
-    private boolean smoothShading;
-    private VertexFormat format;
     private Sprite sprite;
+    private VertexFormat format;
 
-    public OBJModel(List<Vector3f> vertices, List<Vec2f> textCoords, List<Vector3f> normals, List<Face> faces, boolean smoothShading) {
+    public OBJModel(List<Vector3f> vertices, List<Vec2f> textCoords, List<Vector3f> normals, List<Face> faces) {
         this.vertices = vertices;
         this.textCoords = textCoords;
         this.normals = normals;
         this.faces = faces;
-        this.smoothShading = smoothShading;
-        this.format = VertexFormats.POSITION_UV_COLOR_NORMAL;
+        this.format = VertexFormats.POSITION_COLOR_UV_NORMAL;
+        //TODO later for now just get the model rendering
         this.sprite = MinecraftClient.getInstance().getSpriteAtlas().getSprite(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
     }
 
     public OBJModel() {
-        this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), true);
+        this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
     }
 
     @Override
@@ -48,6 +48,10 @@ public class OBJModel implements BakedModel {
     }
 
     private List<BakedQuad> buildQuads() {
+        if(getVertices().isEmpty()) {
+            throw new NullPointerException("Model cannot be parsed!");
+        }
+
         List<BakedQuad> quads = new ArrayList<>();
         for (Face face : faces) {
             Vec2f[] texCoords = {
@@ -80,32 +84,39 @@ public class OBJModel implements BakedModel {
         if(scale < 1.0E-4f) normal.set(0, 0, 0);
         normal.scale(1 / scale);
 
-        //TODO later, for now use textures idc
-        int tintIndex = 0;
-
-        return new BakedQuad(Ints.concat(
-                vertexToInts(vertices[0], normal, textCoords[0]),
-                vertexToInts(vertices[1], normal, textCoords[1]),
-                vertexToInts(vertices[2], normal, textCoords[2]),
-                vertexToInts(vertices[3], normal, textCoords[3])),
-                tintIndex, Direction.getFacing(normal.x(), normal.y(), normal.z()), sprite);
-    }
-
-    public int[] vertexToInts(Vector3f vertex, Vector3f normal, Vec2f textCoord) {
         int x = ((byte)(normal.x() * 127)) & 0xFF;
         int y = ((byte)(normal.y() * 127)) & 0xFF;
         int z = ((byte)(normal.z() * 127)) & 0xFF;
-        int compressedNormal = x | (y << 0x08) | (z << 0x10);
 
-        return new int[]{
-                Float.floatToRawIntBits(vertex.x()),
-                Float.floatToRawIntBits(vertex.y()),
-                Float.floatToRawIntBits(vertex.z()),
-                1,
-                Float.floatToRawIntBits(textCoord.x),
-                Float.floatToRawIntBits(textCoord.y),
-                compressedNormal
-        };
+        //TODO later, for now use textures idc
+        int tintIndex = 0;
+        int[] quadData = new int[format.getVertexSize() * 4];
+
+        for (int v = 0; v < vertices.length; v++) {
+            Vector3f vertex = vertices[v];
+            Vec2f textureCoords = textCoords[v];
+
+            for(int e = 0; e < format.getElementCount(); e++) {
+                VertexFormatElement element = format.getElement(e);
+
+                switch (element.getType()) {
+                    case POSITION:
+                        VertexDataUtils.packData(new float[] {vertex.x(), vertex.y(), vertex.z()}, quadData, format, v, e);
+                        break;
+                    case NORMAL:
+                        VertexDataUtils.packData(new float[] {x, y, z}, quadData, format, v, e);
+                        break;
+                    case COLOR:
+                        VertexDataUtils.packData(new float[] {1, 1, 1, 1}, quadData, format, v, e);
+                        break;
+                    case UV:
+                        VertexDataUtils.packData(new float[] {textureCoords.x, textureCoords.y}, quadData, format, v, e);
+                        break;
+                }
+            }
+        }
+
+        return new BakedQuad(quadData, tintIndex, Direction.getFacing(normal.x(), normal.y(), normal.z()), sprite);
     }
 
     @Override
@@ -156,21 +167,5 @@ public class OBJModel implements BakedModel {
 
     public List<Face> getFaces() {
         return faces;
-    }
-
-    public VertexFormat getFormat() {
-        return format;
-    }
-
-    public void setFormat(VertexFormat format) {
-        this.format = format;
-    }
-
-    public boolean isSmoothShadingEnabled() {
-        return smoothShading;
-    }
-
-    public void setSmoothShading(boolean smoothShading) {
-        this.smoothShading = smoothShading;
     }
 }

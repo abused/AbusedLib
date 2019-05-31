@@ -14,11 +14,11 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
-public class ObjUnbakedModel implements UnbakedModel {
+public class OBJUnbakedModel implements UnbakedModel {
 
     private OBJModel model;
 
-    public ObjUnbakedModel(OBJModel model) {
+    public OBJUnbakedModel(OBJModel model) {
         this.model = model;
     }
 

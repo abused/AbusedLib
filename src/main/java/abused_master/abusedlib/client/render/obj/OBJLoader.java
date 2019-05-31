@@ -15,6 +15,11 @@ public class OBJLoader {
     public static final OBJLoader INSTANCE = new OBJLoader();
     private Set<String> objHandlers = new HashSet<>();
 
+    public static final String VERTEX = "v";
+    public static final String TEXTURE_COORDINATE = "vt";
+    public static final String NORMAL = "vn";
+    public static final String FACE = "f";
+
     public void registerObjHandler(String modid) {
         if(!objHandlers.contains(modid)) {
             objHandlers.add(modid);
@@ -76,57 +81,53 @@ public class OBJLoader {
 
     public OBJModel loadModel(Reader reader) {
         OBJModel model = new OBJModel();
-
         Scanner scanner = new Scanner(reader);
+
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if(line != null && !line.equals("") && !line.startsWith("#")) {
-                String[] tokens = line.split(" ");
+            if (line != null && !line.equals("") && !line.startsWith("#")) {
+                String[] split = line.split(" ");
+                String[] tokens = Arrays.copyOfRange(split, 1, split.length);
 
-                switch (tokens[0]) {
-                    case "v":
+                switch (split[0]) {
+                    case VERTEX:
+                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Vertices must be a length of 3, x, y and z. Line: " + line);
                         model.getVertices().add(new Vector3f(
-                                Float.parseFloat(tokens[1]),
-                                Float.parseFloat(tokens[2]),
-                                Float.parseFloat(tokens[3])
-                        ));
-                        break;
-                    case "vn":
-                        model.getNormals().add(new Vector3f(
-                                Float.parseFloat(tokens[1]),
-                                Float.parseFloat(tokens[2]),
-                                Float.parseFloat(tokens[3])
-                        ));
-                        break;
-                    case "vt":
-                        model.getTextCoords().add(new Vec2f(
+                                Float.parseFloat(tokens[0]),
                                 Float.parseFloat(tokens[1]),
                                 Float.parseFloat(tokens[2])
                         ));
                         break;
-                    case "f":
-                        int[] vertexIndices = new int[4];
-                        int[] textureCoordsIndices = new int[4];
-                        int[] normalIndices = new int[4];
+                    case NORMAL:
+                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Normals must be a length of 3, x, y and z. Line: " + line);
+                        model.getNormals().add(new Vector3f(
+                                Float.parseFloat(tokens[0]),
+                                Float.parseFloat(tokens[1]),
+                                Float.parseFloat(tokens[2])
+                        ));
+                        break;
+                    case TEXTURE_COORDINATE:
+                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Texture Coordinates must be a length of 2, with a u and a v. Line: " + line);
+                        model.getTextCoords().add(new Vec2f(
+                                Float.parseFloat(tokens[0]),
+                                Float.parseFloat(tokens[1])
+                        ));
+                        break;
+                    case FACE:
+                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Faces must have at least 3 vertices");
+                        int[] vertexIndices = new int[tokens.length];
+                        int[] textureCoordIndices = new int[tokens.length];
+                        int[] normalIndices = new int[tokens.length];
 
-                        for (int i = 1; i < tokens.length; i++) {
+                        for (int i = 0; i < tokens.length; i++) {
                             String[] data = tokens[i].split("/");
 
-                            vertexIndices[i - 1] = Integer.parseInt(data[0]);
-                            textureCoordsIndices[i - 1] = data.length < 2 || Strings.isNullOrEmpty(data[1]) ? null : Integer.parseInt(data[1]);
-                            normalIndices[i - 1] = data.length < 3 || Strings.isNullOrEmpty(tokens[2]) ? null : Integer.parseInt(data[2]);
+                            vertexIndices[i] = Integer.parseInt(data[0]);
+                            textureCoordIndices[i] = data.length < 2 || Strings.isNullOrEmpty(data[1]) ? 0 : Integer.parseInt(data[1]);
+                            normalIndices[i] = data.length < 3 || Strings.isNullOrEmpty(data[2]) ? 0 : Integer.parseInt(data[2]);
                         }
 
-                        if(tokens.length < 5) {
-                            vertexIndices[3] = Integer.parseInt(tokens[3].split("/")[0]);
-                            textureCoordsIndices[3] = tokens[3].split("/").length < 2 || Strings.isNullOrEmpty(tokens[3].split("/")[1]) ? null : Integer.parseInt(tokens[3].split("/")[1]);
-                            normalIndices[3] = tokens[3].split("/").length < 3 || Strings.isNullOrEmpty(tokens[2]) ? null : Integer.parseInt(tokens[3].split("/")[2]);
-                        }
-
-                        model.getFaces().add(new Face(vertexIndices, textureCoordsIndices, normalIndices));
-                        break;
-                    case "s":
-                        model.setSmoothShading(!line.contains("off"));
+                        model.getFaces().add(new Face(vertexIndices, textureCoordIndices, normalIndices));
                         break;
                     default:
                         AbusedLib.LOGGER.warn("Unknown line: " + line);
@@ -153,7 +154,7 @@ public class OBJLoader {
         return model;
     }
 
-    public ObjUnbakedModel toUnbakedModel(OBJModel model) {
-        return new ObjUnbakedModel(model);
+    public OBJUnbakedModel toUnbakedModel(OBJModel model) {
+        return new OBJUnbakedModel(model);
     }
 }

@@ -1,7 +1,7 @@
 package abused_master.abusedlib.mixins;
 
 import abused_master.abusedlib.client.render.obj.OBJLoader;
-import abused_master.abusedlib.client.render.obj.ObjUnbakedModel;
+import abused_master.abusedlib.client.render.obj.OBJUnbakedModel;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.resource.Resource;
@@ -30,7 +30,7 @@ public abstract class MixinModelLoader {
             Resource resource = this.resourceManager.getResource(new Identifier(identifier.getNamespace(), "models/" + identifier.getPath()));
 
             try (Reader reader = new InputStreamReader(resource.getInputStream())) {
-                this.putModel(identifier, new ObjUnbakedModel(OBJLoader.INSTANCE.loadModel(reader)));
+                this.putModel(identifier, new OBJUnbakedModel(OBJLoader.INSTANCE.loadModel(reader)));
             }
 
             ci.cancel();
