@@ -32,6 +32,7 @@ public class OBJLoader {
         return objHandlers.contains(modid);
     }
 
+    /**
     public int createDisplayList(OBJModel model) {
         int displayList = GlStateManager.genLists(1);
         GlStateManager.newList(displayList, GL11.GL_COMPILE);
@@ -78,9 +79,10 @@ public class OBJLoader {
         }
         GlStateManager.end();
     }
+    */
 
     public OBJModel loadModel(Reader reader) {
-        OBJModel model = new OBJModel();
+        OBJMeshBuilder meshModel = new OBJMeshBuilder();
         Scanner scanner = new Scanner(reader);
 
         while (scanner.hasNextLine()) {
@@ -92,7 +94,7 @@ public class OBJLoader {
                 switch (split[0]) {
                     case VERTEX:
                         if(tokens.length < 3) AbusedLib.LOGGER.warn("Vertices must be a length of 3, x, y and z. Line: " + line);
-                        model.getVertices().add(new Vector3f(
+                        meshModel.getVertices().add(new Vector3f(
                                 Float.parseFloat(tokens[0]),
                                 Float.parseFloat(tokens[1]),
                                 Float.parseFloat(tokens[2])
@@ -100,7 +102,7 @@ public class OBJLoader {
                         break;
                     case NORMAL:
                         if(tokens.length < 3) AbusedLib.LOGGER.warn("Normals must be a length of 3, x, y and z. Line: " + line);
-                        model.getNormals().add(new Vector3f(
+                        meshModel.getNormals().add(new Vector3f(
                                 Float.parseFloat(tokens[0]),
                                 Float.parseFloat(tokens[1]),
                                 Float.parseFloat(tokens[2])
@@ -108,7 +110,7 @@ public class OBJLoader {
                         break;
                     case TEXTURE_COORDINATE:
                         if(tokens.length < 3) AbusedLib.LOGGER.warn("Texture Coordinates must be a length of 2, with a u and a v. Line: " + line);
-                        model.getTextCoords().add(new Vec2f(
+                        meshModel.getTextCoords().add(new Vec2f(
                                 Float.parseFloat(tokens[0]),
                                 Float.parseFloat(tokens[1])
                         ));
@@ -127,7 +129,7 @@ public class OBJLoader {
                             normalIndices[i] = data.length < 3 || Strings.isNullOrEmpty(data[2]) ? 0 : Integer.parseInt(data[2]);
                         }
 
-                        model.getFaces().add(new Face(vertexIndices, textureCoordIndices, normalIndices));
+                        meshModel.getFaces().add(new Face(vertexIndices, textureCoordIndices, normalIndices));
                         break;
                     default:
                         AbusedLib.LOGGER.warn("Unknown line: " + line);
@@ -136,7 +138,7 @@ public class OBJLoader {
         }
 
         scanner.close();
-        return model;
+        return meshModel.build();
     }
 
     //TODO
