@@ -1,11 +1,9 @@
 package abused_master.abusedlib.client.render.obj;
 
 import abused_master.abusedlib.AbusedLib;
-import com.mojang.blaze3d.platform.GlStateManager;
-import joptsimple.internal.Strings;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.util.math.Vec2f;
-import org.lwjgl.opengl.GL11;
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
 
 import java.io.*;
 import java.util.*;
@@ -14,11 +12,6 @@ public class OBJLoader {
 
     public static final OBJLoader INSTANCE = new OBJLoader();
     private Set<String> objHandlers = new HashSet<>();
-
-    public static final String VERTEX = "v";
-    public static final String TEXTURE_COORDINATE = "vt";
-    public static final String NORMAL = "vn";
-    public static final String FACE = "f";
 
     public void registerObjHandler(String modid) {
         if(!objHandlers.contains(modid)) {
@@ -33,7 +26,7 @@ public class OBJLoader {
     }
 
     /**
-    public int createDisplayList(OBJModel model) {
+    public int createDisplayList(OBJBakedModel model) {
         int displayList = GlStateManager.genLists(1);
         GlStateManager.newList(displayList, GL11.GL_COMPILE);
         {
@@ -45,7 +38,7 @@ public class OBJLoader {
     }
 
     //For TESR calls and whatnot
-    public void render(OBJModel model) {
+    public void render(OBJBakedModel model) {
         GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 120);
         GlStateManager.begin(GL11.GL_TRIANGLES);
         for (Face face : model.getFaces()) {
@@ -82,81 +75,15 @@ public class OBJLoader {
     */
 
     public OBJModel loadModel(Reader reader) {
-        OBJMeshBuilder meshModel = new OBJMeshBuilder();
-        Scanner scanner = new Scanner(reader);
-
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if (line != null && !line.equals("") && !line.startsWith("#")) {
-                String[] split = line.split(" ");
-                String[] tokens = Arrays.copyOfRange(split, 1, split.length);
-
-                switch (split[0]) {
-                    case VERTEX:
-                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Vertices must be a length of 3, x, y and z. Line: " + line);
-                        meshModel.getVertices().add(new Vector3f(
-                                Float.parseFloat(tokens[0]),
-                                Float.parseFloat(tokens[1]),
-                                Float.parseFloat(tokens[2])
-                        ));
-                        break;
-                    case NORMAL:
-                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Normals must be a length of 3, x, y and z. Line: " + line);
-                        meshModel.getNormals().add(new Vector3f(
-                                Float.parseFloat(tokens[0]),
-                                Float.parseFloat(tokens[1]),
-                                Float.parseFloat(tokens[2])
-                        ));
-                        break;
-                    case TEXTURE_COORDINATE:
-                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Texture Coordinates must be a length of 2, with a u and a v. Line: " + line);
-                        meshModel.getTextCoords().add(new Vec2f(
-                                Float.parseFloat(tokens[0]),
-                                Float.parseFloat(tokens[1])
-                        ));
-                        break;
-                    case FACE:
-                        if(tokens.length < 3) AbusedLib.LOGGER.warn("Faces must have at least 3 vertices");
-                        int[] vertexIndices = new int[tokens.length];
-                        int[] textureCoordIndices = new int[tokens.length];
-                        int[] normalIndices = new int[tokens.length];
-
-                        for (int i = 0; i < tokens.length; i++) {
-                            String[] data = tokens[i].split("/");
-
-                            vertexIndices[i] = Integer.parseInt(data[0]);
-                            textureCoordIndices[i] = data.length < 2 || Strings.isNullOrEmpty(data[1]) ? 0 : Integer.parseInt(data[1]);
-                            normalIndices[i] = data.length < 3 || Strings.isNullOrEmpty(data[2]) ? 0 : Integer.parseInt(data[2]);
-                        }
-
-                        meshModel.getFaces().add(new Face(vertexIndices, textureCoordIndices, normalIndices));
-                        break;
-                    default:
-                        AbusedLib.LOGGER.warn("Unknown line: " + line);
-                }
-            }
+        OBJBuilder model;
+        try {
+            Obj obj = ObjUtils.convertToRenderable(ObjReader.read(reader));
+            model = new OBJBuilder(ObjUtils.triangulate(obj));
+        } catch (IOException e) {
+            AbusedLib.LOGGER.error("Could not read obj model!", e);
+            return null;
         }
 
-        scanner.close();
-        return meshModel.build();
-    }
-
-    //TODO
-    public OBJModel loadSprite(Reader reader, OBJModel model) {
-        Scanner scanner = new Scanner(reader);
-        String ln;
-        while ((ln = scanner.nextLine()) != null) {
-            if (ln == null || ln.equals("") || ln.startsWith("#")) {
-
-            }else if(ln.equals("map_Kd")){
-
-            }
-        }
-
-        return model;
-    }
-
-    public OBJUnbakedModel toUnbakedModel(OBJModel model) {
-        return new OBJUnbakedModel(model);
+        return model.build();
     }
 }
