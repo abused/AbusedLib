@@ -18,12 +18,12 @@ public final class BlockFacings {
     public static final BlockFacings WEST;
     public static final BlockFacings EAST;
 
-    public static final BooleanProperty FACING_DOWN = BooleanProperty.create("downFacing");
-    public static final BooleanProperty FACING_UP = BooleanProperty.create("upFacing");
-    public static final BooleanProperty FACING_WEST = BooleanProperty.create("westFacing");
-    public static final BooleanProperty FACING_EAST = BooleanProperty.create("eastFacing");
-    public static final BooleanProperty FACING_NORTH = BooleanProperty.create("northFacing");
-    public static final BooleanProperty FACING_SOUTH = BooleanProperty.create("southFacing");
+    public static final BooleanProperty FACING_DOWN = BooleanProperty.of("downFacing");
+    public static final BooleanProperty FACING_UP = BooleanProperty.of("upFacing");
+    public static final BooleanProperty FACING_WEST = BooleanProperty.of("westFacing");
+    public static final BooleanProperty FACING_EAST = BooleanProperty.of("eastFacing");
+    public static final BooleanProperty FACING_NORTH = BooleanProperty.of("northFacing");
+    public static final BooleanProperty FACING_SOUTH = BooleanProperty.of("southFacing");
 
     /**
      * Check if a specific face is "set"

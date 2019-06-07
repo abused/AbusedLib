@@ -25,13 +25,13 @@ public class FluidContainer implements IFluidContainer {
 
     @Override
     public boolean extractFluid(int amount) {
-        if(fluidStack == null || fluidStack.getAmount() == 0 || amount > fluidStack.getAmount()) {
+        if(fluidStack == null || fluidStack.getCount() == 0 || amount > fluidStack.getCount()) {
             return false;
         }
 
         fluidStack.subtractAmount(amount);
         updateEntity();
-        if (fluidStack.getAmount() <= 0) {
+        if (fluidStack.getCount() <= 0) {
             fluidStack = null;
         }
 
@@ -40,7 +40,7 @@ public class FluidContainer implements IFluidContainer {
 
     @Override
     public boolean fillFluid(FluidStack stack) {
-        if(stack == null || stack.getAmount() <= 0) {
+        if(stack == null || stack.getCount() <= 0) {
             return false;
         }
 
@@ -49,8 +49,8 @@ public class FluidContainer implements IFluidContainer {
             updateEntity();
 
             return true;
-        }else if (fluidStack.areFluidsEqual(stack) && (stack.getAmount() + fluidStack.getAmount()) <= capacity) {
-            fluidStack.addAmount(stack.getAmount());
+        }else if (fluidStack.areFluidsEqual(stack) && (stack.getCount() + fluidStack.getCount()) <= capacity) {
+            fluidStack.addAmount(stack.getCount());
             updateEntity();
 
             return true;
@@ -61,7 +61,7 @@ public class FluidContainer implements IFluidContainer {
 
     @Override
     public int getFluidAmount() {
-        return fluidStack == null ? 0 : fluidStack.getAmount();
+        return fluidStack == null ? 0 : fluidStack.getCount();
     }
 
     @Override

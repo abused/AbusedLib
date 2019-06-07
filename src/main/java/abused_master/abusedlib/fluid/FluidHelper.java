@@ -22,7 +22,7 @@ public class FluidHelper {
             if (fluidHandler.getFluidTank().getFluidStack() == null) {
                 fluidHandler.getFluidTank().setFluidStack(new FluidStack(fluid, 1000));
                 if (!player.isCreative()) {
-                    player.getMainHandStack().subtractAmount(1);
+                    player.getMainHandStack().setCount(player.getMainHandStack().getCount() - 1);
                     player.giveItemStack(new ItemStack(Items.BUCKET));
                 }
                 return true;
@@ -30,7 +30,7 @@ public class FluidHelper {
                 if ((fluidHandler.getFluidTank().getFluidAmount() + 1000) <= fluidHandler.getFluidTank().getFluidCapacity()) {
                     fluidHandler.getFluidTank().fillFluid(new FluidStack(fluid, 1000));
                     if (!player.isCreative()) {
-                        player.getMainHandStack().subtractAmount(1);
+                        player.getMainHandStack().setCount(player.getMainHandStack().getCount() - 1);
                         player.giveItemStack(new ItemStack(Items.BUCKET));
                     }
                     return true;
@@ -40,7 +40,7 @@ public class FluidHelper {
             if (fluidHandler.getFluidTank().getFluidStack() != null && fluidHandler.getFluidTank().getFluidAmount() >= 1000) {
                 if (!player.isCreative()) {
                     player.giveItemStack(new ItemStack(fluidHandler.getFluidTank().getFluidStack().getFluid().getBucketItem()));
-                    player.getMainHandStack().subtractAmount(1);
+                    player.getMainHandStack().setCount(player.getMainHandStack().getCount() - 1);
                 }
                 fluidHandler.getFluidTank().extractFluid(1000);
                 return true;

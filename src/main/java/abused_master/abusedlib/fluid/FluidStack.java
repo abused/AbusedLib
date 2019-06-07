@@ -38,7 +38,7 @@ public class FluidStack {
         this.fluid = fluid;
     }
 
-    public int getAmount() {
+    public int getCount() {
         return amount;
     }
 

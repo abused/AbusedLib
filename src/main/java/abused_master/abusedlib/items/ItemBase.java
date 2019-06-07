@@ -2,6 +2,8 @@ package abused_master.abusedlib.items;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 
 public class ItemBase extends Item {
@@ -9,7 +11,7 @@ public class ItemBase extends Item {
     private String name;
 
     public ItemBase(String name, ItemGroup tab) {
-        super(new Settings().itemGroup(tab));
+        super((new Settings()).group(tab));
         this.name = name;
     }
 
@@ -18,11 +20,11 @@ public class ItemBase extends Item {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
+    public Component getName() {
+        return new TextComponent(this.name);
     }
 
     public Identifier getNameIdentifier(String modid) {
-        return new Identifier(modid, getName());
+        return new Identifier(modid, this.name);
     }
 }

@@ -25,7 +25,7 @@ public class RegistryHelper {
      */
     public static void registerBlock(String modid, BlockBase block) {
         Registry.register(Registry.BLOCK, block.getNameIdentifier(modid), block);
-        Registry.register(Registry.ITEM, block.getNameIdentifier(modid), new BlockItem(block, new Item.Settings().itemGroup(block.getTab())));
+        Registry.register(Registry.ITEM, block.getNameIdentifier(modid), new BlockItem(block, new Item.Settings().group(block.getTab())));
     }
 
     public static void registerBlock(String modid, BlockBase block, BlockItem blockItem) {
@@ -35,7 +35,7 @@ public class RegistryHelper {
 
     public static void registerBlock(Identifier identifier, ItemGroup itemGroup, Block block) {
         Registry.register(Registry.BLOCK, identifier, block);
-        Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().itemGroup(itemGroup)));
+        Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(itemGroup)));
     }
 
     public static void registerBlock(Identifier identifier, Block block, BlockItem blockItem) {
