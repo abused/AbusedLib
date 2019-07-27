@@ -9,7 +9,7 @@ public class ItemBase extends Item {
     private String name;
 
     public ItemBase(String name, ItemGroup tab) {
-        super(new Settings().itemGroup(tab));
+        super(new Settings().group(tab));
         this.name = name;
     }
 
@@ -18,11 +18,11 @@ public class ItemBase extends Item {
         this.name = name;
     }
 
-    public String getName() {
+    public String getItemName() {
         return name;
     }
 
     public Identifier getNameIdentifier(String modid) {
-        return new Identifier(modid, getName());
+        return new Identifier(modid, getItemName());
     }
 }

@@ -81,7 +81,7 @@ public enum PropertyBlockFacings implements StringIdentifiable {
     PipeEnd_ENSUW(BlockFacings.computeHash(false, true, true, true, false, true));
 
 
-    public static final EnumProperty FACINGS = EnumProperty.create("facings", PropertyBlockFacings.class);
+    public static final EnumProperty FACINGS = EnumProperty.of("facings", PropertyBlockFacings.class);
 
     public static final EnumSet<PropertyBlockFacings> ALL_AND_NONE;
     public static final EnumSet<PropertyBlockFacings> FACES;

@@ -13,7 +13,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-
 public class RenderHelper {
 
     public static final int MAX_LIGHT_X = 0xF000F0;
@@ -84,6 +83,21 @@ public class RenderHelper {
         GlStateManager.disableBlend();
         GlStateManager.enableLighting();
         GlStateManager.popMatrix();
+    }
+
+    public static void renderTexture(float size, float[] color) {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder =tessellator.getBufferBuilder();
+        double uv1 = 0.0D;
+        double uv2 = 1.0D;
+
+        GlStateManager.color4f(color[0], color[1], color[2], color[3]);
+        bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
+        bufferBuilder.vertex(size / 2f, size / 2f, 0.0D).texture(uv1, uv2).next();
+        bufferBuilder.vertex(size / 2f, -size / 2f, 0.0D).texture(uv1, uv1).next();
+        bufferBuilder.vertex(-size / 2f, -size / 2f, 0.0D).texture(uv2, uv1).next();
+        bufferBuilder.vertex(-size / 2f, size / 2f, 0.0D).texture(uv2, uv2).next();
+        tessellator.draw();
     }
 
     public static void translateAgainstPlayer(BlockPos pos, boolean offset) {

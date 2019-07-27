@@ -21,8 +21,8 @@ public class ItemBlockMultipart extends BlockItem {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         World world = context.getWorld();
-        ItemStack stack = context.getItemStack();
-        Direction direction = context.getFacing();
+        ItemStack stack = context.getStack();
+        Direction direction = context.getPlayerFacing();
         BlockPos pos = context.getBlockPos().offset(direction);
 
         if(!world.isAir(pos) && world.getBlockEntity(pos) instanceof IMultipartHost) {
@@ -30,7 +30,7 @@ public class ItemBlockMultipart extends BlockItem {
 
             if(!multipartHost.hasMultipart(direction)) {
                 if(multipartHost.tryAddMultipart(direction, (IMultipart) ((BlockWithEntity) Block.getBlockFromItem(stack.getItem())).createBlockEntity(world))) {
-                    stack.subtractAmount(1);
+                    stack.decrement(1);
                     return ActionResult.SUCCESS;
                 }
             }

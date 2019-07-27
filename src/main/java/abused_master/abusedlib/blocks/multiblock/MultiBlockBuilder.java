@@ -26,9 +26,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -40,6 +42,7 @@ public class MultiBlockBuilder {
     public static Map<UUID, BlockPos> playerCommandCache = Maps.newHashMap();
     //The List used for saving a players UUID to when `/createmultiblock` is ran so we know what to do on right click
     public static List<UUID> activatedCommands = Lists.newArrayList();
+    public static Map<Identifier, MultiBlock> loadedMultiblocks = Maps.newHashMap();
 
     /**
      * Registering the features used for creating the MultiBlocks
@@ -78,60 +81,64 @@ public class MultiBlockBuilder {
     }
 
     /**
-     * Get a MultiBlock using its name from the resources/multiblocks folder
-     * @param server - The server that will be used to get the DataManager
-     * @param location - The Identifier location for the file, using the MODID and file name, adding the .json to the end
+     * Get a MultiBlock from the map of loaded MultiBlock
+     * @param identifier - The identifier to look for, ex: new Identifier(MODID, "MultiBlockName.json");
+     * @return - The MultiBlock from the map
+     */
+    public static MultiBlock getMultiBlock(Identifier identifier) {
+        return loadedMultiblocks.getOrDefault(identifier, null);
+    }
+
+    /**
+     * Get a MultiBlock using its inputStream
+     * @param multiblockJsonFile - The InputStream that the multiblock will be created from
      * @return - The MultiBlock grabbed, returns an empty MultiBlock if not found
      */
-    public static MultiBlock getMultiBlock(MinecraftServer server, Identifier location) {
+    public static MultiBlock getMultiBlock(Identifier identifier, InputStream multiblockJsonFile) throws IOException {
         MultiBlock multiblock = new MultiBlock();
 
-        Identifier multiblockLocation = new Identifier(location.getNamespace(), "multiblocks/" + location.getPath());
-        if (server.getDataManager().containsResource(multiblockLocation)) {
-            InputStream multiblockJsonFile = null;
-            try {
-                multiblockJsonFile = server.getDataManager().getResource(multiblockLocation).getInputStream();
-            } catch (IOException e) {
-                AbusedLib.LOGGER.fatal("Error parsing MultiBlock input stream! Source: " + multiblockLocation.toString(), e);
+        if (multiblockJsonFile == null) {
+            AbusedLib.LOGGER.warn("The defined MultiBlock structure location cannot be null! Source: " + identifier.toString());
+            return multiblock;
+        }
+
+        JsonObject multiblockJsonObject = new JsonParser().parse(IOUtils.toString(multiblockJsonFile, StandardCharsets.UTF_8)).getAsJsonObject();
+        if (multiblockJsonObject == null) {
+            AbusedLib.LOGGER.warn("Invalid MultiBlock structure file, unable to parse! Source: " + identifier.toString());
+            return multiblock;
+        }
+
+        JsonObject multiblockData = multiblockJsonObject.getAsJsonObject("multiblock_data");
+
+        if (multiblockData == null) {
+            AbusedLib.LOGGER.warn("Invalid MultiBlock structure data, unable to find required components! Source: " + identifier.toString());
+            return multiblock;
+        }
+
+        for (Map.Entry<String, JsonElement> entry : multiblockData.entrySet()) {
+            JsonObject componentObject = entry.getValue().getAsJsonObject();
+            JsonArray blockPosArray = componentObject.get("pos").getAsJsonArray();
+            BlockPos blockPos = new BlockPos(blockPosArray.get(0).getAsInt(), blockPosArray.get(1).getAsInt(), blockPosArray.get(2).getAsInt());
+            String blockName = componentObject.get("block").getAsString();
+            Object block = blockName.startsWith("#") ? TagRegistry.block(new Identifier(blockName.replace("#", ""))) : Registry.BLOCK.get(new Identifier(blockName));
+
+            if (blockPosArray == null || blockPos == null || block == null) {
+                AbusedLib.LOGGER.warn("NULL! A component in the MultiBlock structure has returned null! BlockPosArray: " + blockPosArray.getAsString() + ", BlockPos: " + blockPos.toString() + " Component Block: " + blockName);
+                System.out.println(blockPosArray);
+                System.out.println(blockPos);
+                System.out.println(block);
+
+                return multiblock;
             }
 
-            if (multiblockJsonFile == null) {
-                AbusedLib.LOGGER.fatal("The defined MultiBlock structure location cannot be null! Source: " + location.toString());
+            if (entry.getKey().contains("center")) {
+                JsonArray sizeArray = componentObject.get("size").getAsJsonArray();
+                multiblock.setSize(new BlockPos(sizeArray.get(0).getAsInt(), sizeArray.get(1).getAsInt(), sizeArray.get(2).getAsInt()));
+                multiblock.setCentralPoint(blockPos, block);
+                continue;
             }
 
-            JsonObject multiblockJsonObject = new JsonParser().parse(new BufferedReader(new InputStreamReader(multiblockJsonFile))).getAsJsonObject();
-            if (multiblockJsonObject == null) {
-                AbusedLib.LOGGER.fatal("Invalid MultiBlock structure file, unable to parse! Source: " + location.toString());
-            }
-
-            JsonObject multiblockData = multiblockJsonObject.getAsJsonObject("multiblock_data");
-
-            if (multiblockData == null) {
-                AbusedLib.LOGGER.fatal("Invalid MultiBlock structure data, unable to find required components! Source: " + location.toString());
-            }
-
-            for (Map.Entry<String, JsonElement> entry : multiblockData.entrySet()) {
-                JsonObject componentObject = entry.getValue().getAsJsonObject();
-                JsonArray blockPosArray = componentObject.get("pos").getAsJsonArray();
-                BlockPos blockPos = new BlockPos(blockPosArray.get(0).getAsInt(), blockPosArray.get(1).getAsInt(), blockPosArray.get(2).getAsInt());
-                String blockName = componentObject.get("block").getAsString();
-                Object block = blockName.startsWith("#") ? TagRegistry.block(new Identifier(blockName.replace("#", ""))) : Registry.BLOCK.get(new Identifier(blockName));
-
-                if (blockPosArray == null || blockPos == null || block == null) {
-                    AbusedLib.LOGGER.fatal("NULL! A component in the MultiBlock structure has returned null! BlockPosArray: " + blockPosArray.getAsString() + ", BlockPos: " + blockPos.toString() + " Component Block: " + blockName);
-                }
-
-                if (entry.getKey().contains("center")) {
-                    JsonArray sizeArray = componentObject.get("size").getAsJsonArray();
-                    multiblock.setSize(new BlockPos(sizeArray.get(0).getAsInt(), sizeArray.get(1).getAsInt(), sizeArray.get(2).getAsInt()));
-                    multiblock.setCentralPoint(blockPos, block);
-                    continue;
-                }
-
-                multiblock.addComponent(blockPos, block);
-            }
-        } else {
-            AbusedLib.LOGGER.fatal("Unable to locate MultiBlock resource! Source: " + multiblockLocation.toString());
+            multiblock.addComponent(blockPos, block);
         }
 
         return multiblock;
@@ -163,18 +170,22 @@ public class MultiBlockBuilder {
 
             JsonObject centerData = new JsonObject();
             JsonArray centerPosArray = new JsonArray();
+
             JsonArray sizeArray = new JsonArray();
+            sizeArray.add(structure.getSize().getX());
+            sizeArray.add(structure.getSize().getY());
+            sizeArray.add(structure.getSize().getZ());
+
             Block centerBlock = world.getBlockState(centerPlayerPos).getBlock();
 
             centerPosArray.add(centerPos.getX());
             centerPosArray.add(centerPos.getY());
             centerPosArray.add(centerPos.getZ());
+
             centerData.addProperty("block", Registry.BLOCK.getId(centerBlock).toString());
             centerData.add("pos", centerPosArray);
+            centerData.add("size", sizeArray);
             multiblockData.add("center", centerData);
-            sizeArray.add(structure.getSize().getX());
-            sizeArray.add(structure.getSize().getY());
-            sizeArray.add(structure.getSize().getZ());
 
             int i = 0;
             for (List<Structure.StructureBlockInfo> structureBlockInfoList : list) {
@@ -191,7 +202,6 @@ public class MultiBlockBuilder {
 
                     componentData.addProperty("block", Registry.BLOCK.getId(structureBlockInfo.state.getBlock()).toString());
                     componentData.add("pos", posArray);
-                    componentData.add("size", sizeArray);
 
                     multiblockData.add(String.valueOf(i), componentData);
                     i++;

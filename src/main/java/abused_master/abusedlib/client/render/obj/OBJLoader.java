@@ -1,9 +1,10 @@
 package abused_master.abusedlib.client.render.obj;
 
 import abused_master.abusedlib.AbusedLib;
-import de.javagl.obj.Obj;
-import de.javagl.obj.ObjReader;
-import de.javagl.obj.ObjUtils;
+import de.javagl.obj.*;
+import net.minecraft.resource.Resource;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
 
 import java.io.*;
 import java.util.*;
@@ -74,16 +75,31 @@ public class OBJLoader {
     }
     */
 
-    public OBJModel loadModel(Reader reader) {
+    public OBJModel loadModel(Reader reader, String modid, ResourceManager manager) {
         OBJBuilder model;
         try {
             Obj obj = ObjUtils.convertToRenderable(ObjReader.read(reader));
-            model = new OBJBuilder(ObjUtils.triangulate(obj));
+            model = new OBJBuilder(ObjUtils.triangulate(obj), loadMTL(manager, modid, obj.getMtlFileNames()));
         } catch (IOException e) {
             AbusedLib.LOGGER.error("Could not read obj model!", e);
             return null;
         }
-
         return model.build();
+    }
+
+    public List<Mtl> loadMTL(ResourceManager manager, String modid, List<String> mtlNames) throws IOException {
+        List<Mtl> mtls = new ArrayList<>();
+
+        for (String name : mtlNames) {
+            Identifier resourceId = new Identifier(modid, "models/block/" + name);
+            if(manager.containsResource(resourceId)) {
+                Resource resource = manager.getResource(resourceId);
+                mtls.addAll(MtlReader.read(resource.getInputStream()));
+            }else {
+                AbusedLib.LOGGER.warn("Warning, a model specifies an MTL File but it could not be found! Source: " + modid + ":" + name);
+            }
+        }
+
+        return mtls;
     }
 }

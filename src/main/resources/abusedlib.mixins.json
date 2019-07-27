@@ -8,7 +8,8 @@
     "MixinPlayerEntity"
   ],
   "client": [
-    "MixinModelLoader"
+    "MixinModelLoader",
+    "MixinInGameHud"
   ],
   "injectors": {
     "defaultRequire": 1

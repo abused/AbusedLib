@@ -44,6 +44,6 @@ public class BlockBase extends Block {
 
     @Override
     public List<ItemStack> getDroppedStacks(BlockState blockState_1, LootContext.Builder lootContext$Builder_1) {
-        return Lists.newArrayList(new ItemStack(Item.getItemFromBlock(this)));
+        return Lists.newArrayList(new ItemStack(Item.fromBlock(this)));
     }
 }

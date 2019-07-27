@@ -30,7 +30,7 @@ public abstract class MixinModelLoader {
             Resource resource = this.resourceManager.getResource(new Identifier(identifier.getNamespace(), "models/" + identifier.getPath()));
 
             try (Reader reader = new InputStreamReader(resource.getInputStream())) {
-                this.putModel(identifier, new OBJUnbakedModel(OBJLoader.INSTANCE.loadModel(reader)));
+                this.putModel(identifier, new OBJUnbakedModel(OBJLoader.INSTANCE.loadModel(reader, identifier.getNamespace(), this.resourceManager)));
             }
 
             ci.cancel();

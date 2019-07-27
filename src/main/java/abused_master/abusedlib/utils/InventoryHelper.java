@@ -23,9 +23,9 @@ public class InventoryHelper {
 
         for (int i = 0; i < inventory.getInvSize(); i++) {
             if(!inventory.getInvStack(i).isEmpty()) {
-                if(canItemStacksStack(inventory.getInvStack(i), stack) && inventory.getInvStack(i).getAmount() < 64) {
+                if(canItemStacksStack(inventory.getInvStack(i), stack) && inventory.getInvStack(i).getCount() < 64) {
                     if(!simulate)
-                        stack.addAmount(inventory.getInvStack(i).getAmount());
+                        stack.increment(inventory.getInvStack(i).getCount());
                         inventory.setInvStack(i, stack);
 
                     return true;
@@ -42,7 +42,7 @@ public class InventoryHelper {
     }
 
     public static boolean canItemStacksStack(ItemStack a, ItemStack b) {
-        if (a.isEmpty() || !a.isEqualIgnoreTags(b) || a.hasTag() != b.hasTag())
+        if (a.isEmpty() || !a.isItemEqual(b) || a.hasTag() != b.hasTag())
             return false;
 
         return (!a.hasTag() || a.getTag().equals(b.getTag()));
@@ -107,23 +107,23 @@ public class InventoryHelper {
     private static boolean mergeStack(PlayerInventory playerInv, boolean mergeIntoPlayer, Slot sourceSlot, List<Slot> slots, boolean reverse) {
         ItemStack sourceStack = sourceSlot.getStack();
 
-        int originalSize = sourceStack.getAmount();
+        int originalSize = sourceStack.getCount();
 
         int len = slots.size();
         int idx;
 
-        if (sourceStack.canStack()) {
+        if (sourceStack.isStackable()) {
             idx = reverse ? len - 1 : 0;
 
-            while (sourceStack.getAmount() > 0 && (reverse ? idx >= 0 : idx < len)) {
+            while (sourceStack.getCount() > 0 && (reverse ? idx >= 0 : idx < len)) {
                 Slot targetSlot = slots.get(idx);
                 if ((targetSlot.inventory == playerInv) == mergeIntoPlayer) {
                     ItemStack target = targetSlot.getStack();
-                    if (ItemStack.areEqual(sourceStack, target)) {
-                        int targetMax = Math.min(targetSlot.getMaxStackAmount(), target.getMaxAmount());
-                        int toTransfer = Math.min(sourceStack.getAmount(), targetMax - target.getAmount());
+                    if (ItemStack.areItemsEqual(sourceStack, target)) {
+                        int targetMax = Math.min(targetSlot.getMaxStackAmount(), target.getMaxCount());
+                        int toTransfer = Math.min(sourceStack.getCount(), targetMax - target.getCount());
                         if (toTransfer > 0) {
-                            target.addAmount(toTransfer);
+                            target.increment(toTransfer);
                             sourceSlot.takeStack(toTransfer);
                             targetSlot.markDirty();
                         }
@@ -136,7 +136,7 @@ public class InventoryHelper {
                     idx++;
                 }
             }
-            if (sourceStack.getAmount() == 0) {
+            if (sourceStack.getCount() == 0) {
                 sourceSlot.setStack(ItemStack.EMPTY);
                 return true;
             }
@@ -159,7 +159,7 @@ public class InventoryHelper {
             }
         }
 
-        if (sourceStack.getAmount() != originalSize) {
+        if (sourceStack.getCount() != originalSize) {
             sourceSlot.markDirty();
             return true;
         }

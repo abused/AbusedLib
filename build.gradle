@@ -24,6 +24,7 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 	modCompile "de.javagl:obj:0.3.0"
+	include "de.javagl:obj:0.3.0"
 	
 	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
 }

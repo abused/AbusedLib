@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "abusedlib",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "name": "AbusedLib",
   "description": "A lib mod with utilities I commonly use.",
   "authors": [
@@ -18,6 +18,9 @@
     "main": [
       "abused_master.abusedlib.AbusedLib",
       "abused_master.abusedlib.test.Test"
+    ],
+    "client": [
+      "abused_master.abusedlib.AbusedLibClient"
     ]
   },
   "mixins": [

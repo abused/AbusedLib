@@ -94,8 +94,8 @@ public class RecipeGenerator {
         JsonObject result = new JsonObject();
         Identifier registryName = Registry.ITEM.getId(output.getItem());
         result.addProperty("item", registryName.toString());
-        if (output.getAmount() > 1)
-            result.addProperty("count", output.getAmount());
+        if (output.getCount() > 1)
+            result.addProperty("count", output.getCount());
         recipe.add("result", result);
         return registryName;
     }
