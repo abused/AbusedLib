@@ -8,19 +8,15 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.registry.CommandRegistry;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.Structure;
 import net.minecraft.tag.Tag;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
+import net.minecraft.text.BaseText;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -28,10 +24,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.apache.commons.io.IOUtils;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
 
 /**
  * A builder class used for saving, creating, loading, and checking custom MultiBlocks using a custom JSON format
@@ -57,10 +55,11 @@ public class MultiBlockBuilder {
 
                     if(!activatedCommands.contains(player.getUuid())) {
                         activatedCommands.add(player.getUuid());
-                        player.addChatMessage(new TextComponent("Right click the center MultiBlock!").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
+                        player.addChatMessage(new LiteralText("Right click the center MultiBlock!").setStyle(new Style().setColor(Formatting.GOLD)), false);
                     }else {
                         activatedCommands.remove(player.getUuid());
-                        player.addChatMessage(new TextComponent("Canceled MultiBlock creation!").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
+                        player.addChatMessage(new LiteralText("Canceled MultiBlock creation!") {
+                        }.setStyle(new Style().setColor(Formatting.GOLD)), false);
                     }
 
                     return 1;
@@ -72,7 +71,7 @@ public class MultiBlockBuilder {
             if(activatedCommands.contains(player.getUuid())) {
                 playerCommandCache.put(player.getUuid(), hitResult.getBlockPos());
                 activatedCommands.remove(player.getUuid());
-                player.addChatMessage(new TextComponent("Saved block as center for MultiBlock!").setStyle(new Style().setColor(ChatFormat.GOLD)), false);
+                player.addChatMessage(new LiteralText("Saved block as center for MultiBlock!").setStyle(new Style().setColor(Formatting.GOLD)), false);
                 return ActionResult.SUCCESS;
             }
 

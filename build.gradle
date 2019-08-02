@@ -1,14 +1,14 @@
 plugins {
-	id 'fabric-loom' version '0.2.3-SNAPSHOT'
+	id 'fabric-loom' version '0.2.4-SNAPSHOT'
 	id 'maven-publish'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = "abused_master.abusedlib"
-archivesBaseName = "AbusedLib"
-version = "${mod_version}"
+group = project.mod_group
+archivesBaseName = project.mod_name
+version = project.mod_version
 
 minecraft {
 }
@@ -23,8 +23,8 @@ dependencies {
 	mappings "net.fabricmc:yarn:${yarn_mappings}"
 	modCompile "net.fabricmc:fabric-loader:${loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-	modCompile "de.javagl:obj:0.3.0"
-	include "de.javagl:obj:0.3.0"
+	modCompile "de.javagl:obj:${javagl_version}"
+	include "de.javagl:obj:${javagl_version}"
 	
 	compileOnly "com.google.code.findbugs:jsr305:${findbugs_version}"
 }

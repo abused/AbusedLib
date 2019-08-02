@@ -23,7 +23,7 @@ public class MixinInGameHud {
     @Shadow
     private int scaledHeight;
 
-    @Inject(method = "draw", at = @At("RETURN"))
+    @Inject(method = "render", at = @At("RETURN"))
     public void draw(float partialTicks, CallbackInfo ci) {
         RenderHudCallback.EVENT.invoker().renderHud(client, scaledWidth, scaledHeight, client.window.getScaleFactor(), partialTicks);
     }

@@ -30,12 +30,12 @@ public class BlockBase extends Block {
         this.tab = itemGroup;
     }
 
-    public String getName() {
+    public String getBlockName() {
         return name;
     }
 
     public Identifier getNameIdentifier(String modid) {
-        return new Identifier(modid, getName());
+        return new Identifier(modid, getBlockName());
     }
 
     public ItemGroup getTab() {
