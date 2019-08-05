@@ -16,8 +16,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "abused_master.abusedlib.AbusedLib",
-      "abused_master.abusedlib.test.Test"
+      "abused_master.abusedlib.AbusedLib"
     ],
     "client": [
       "abused_master.abusedlib.AbusedLibClient"
